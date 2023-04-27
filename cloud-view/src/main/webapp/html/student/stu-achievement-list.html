@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="../../styles/css/element-ui.css">
+</head>
+<body>
+    <div id="app">
+        <el-form style="margin-left: 20px;margin-top: 20px" :inline="true" :model="search" class="demo-form-inline">
+            <el-form-item label="科目">
+                <el-input v-model="search.valueOne" placeholder="请输入科目名称"></el-input>
+            </el-form-item>
+            <el-form-item>
+                <el-button type="primary" @click="initList()"> <i class="fa fa-search"></i> 查询</el-button>
+            </el-form-item>
+            <el-form-item>
+                <el-button type="primary" @click="clearSearch()"> <i class="el-icon-refresh-left"></i> 重置</el-button>
+            </el-form-item>
+        </el-form>
+
+        <el-table
+                :data="tableData"
+                border>
+            <el-table-column
+                    prop="date"
+                    label="序号">
+                <template slot-scope="scope">
+                    {{scope.$index+1}}
+                </template>
+            </el-table-column>
+            <el-table-column
+                    label="学生名称">
+                <template slot-scope="scope">
+                    {{scope.row.student.name}}
+                </template>
+            </el-table-column>
+            <el-table-column
+                    label="教师名称">
+                <template slot-scope="scope">
+                    {{scope.row.teacher.name}}
+                </template>
+            </el-table-column>
+            <el-table-column
+                    prop="subject"
+                    label="科目">
+            </el-table-column>
+            <el-table-column
+                    prop="type"
+                    label="类型">
+            </el-table-column>
+            <el-table-column
+                    prop="fraction"
+                    label="分数">
+            </el-table-column>
+            <el-table-column
+                    prop="status"
+                    label="状态">
+            </el-table-column>
+            <el-table-column
+                    prop="createTime"
+                    label="创建时间">
+            </el-table-column>
+            <el-table-column
+                    prop="updateTime"
+                    label="修改时间">
+            </el-table-column>
+        </el-table>
+
+        <el-pagination
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+                :current-page="search.pageNumber"
+                :page-sizes="[5,10]"
+                :page-size="search.pageCount"
+                layout="total, sizes, prev, pager, next, jumper"
+                :total="total">
+        </el-pagination>
+    </div>
+</body>
+</html>
+<link rel="stylesheet" href="../../styles/css/font-awesome.min.css">
+<script src="../../styles/js/vue.js"></script>
+<script src="../../styles/js/element.js"></script>
+<script src="../../styles/js/axios.js"></script>
+<script src="../../styles/js/httpRequest.js"></script>
+<script>
+    new Vue({
+        el:"#app",
+        data:function (){
+            return{
+                form:{},
+                tableData:[],
+                search:{
+                    pageNumber:1,
+                    pageCount:5
+                },
+                total:0,
+                dialogFormVisible:false,
+                dialogFormVisibleAdd:false,
+                formLabelWidth:'120px',
+                multipleSelection: [],
+                roleList: [],
+                tableDataPro:[],
+                ruleForm: {},
+                rules: {
+                    sid: [
+                        { required: true, message: '请输入选择学生', trigger: 'blur' },
+                    ],
+                    cid: [
+                        { required: true, message: '请输入选择科目', trigger: 'blur' },
+                    ],
+                    fraction: [
+                        { required: true, message: '请输入学生成绩', trigger: 'blur' },
+                    ]
+                },
+                flag:true,
+                studentList:[],
+                classList:[],
+            }
+        },
+        methods:{
+            //列表查询
+            initList(){
+                axiosPostRequest("/achievement/findPageByStu",this.search).then(res=>{
+                    this.tableData=res.records
+                    this.total=res.total
+                })
+            },
+            handleSizeChange(val) {
+                this.search.pageCount=val;
+                this.initList();
+            },
+            handleCurrentChange(val) {
+                this.search.pageNumber=val;
+                this.initList();
+            },
+            //跳转到添加页
+            oppenAddDialog(){
+                this.flag=true;
+                this.form={};
+                this.dialogFormVisibleAdd=true;
+            },
+            handleSelectionChange(val) {
+                this.multipleSelection = val;
+            },
+            //重置查询框
+            clearSearch(){
+                this.search={
+                    pageNumber:1,
+                    pageCount:5
+                }
+                this.initList();
+            }
+        },
+        created(){
+            this.initList();
+        }
+    })
+</script>

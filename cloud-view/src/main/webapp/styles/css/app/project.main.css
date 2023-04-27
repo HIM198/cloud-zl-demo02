@@ -1,0 +1,301 @@
+.ztree * {
+    font-size: 12px;
+}
+
+.ztree li a {
+    height: 23px;
+}
+
+.ztree li span.button {
+    width: 18px;
+}
+
+.ztree .node_name i.fa {
+    padding-right: 5px;
+}
+
+select.disabled .select2-selection__arrow {
+    appearance: none;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    display: none;
+}
+
+/*
+	淇敼datatable搴曢儴鏍峰紡
+*/
+div.dtpage {
+    font-size: 12px;
+}
+
+div.dtpage div.dataTables_length select {
+    width: 60px;
+}
+
+div.dtpage .dataTables_length select {
+    width: 60px;
+}
+
+div.dtpage .dataTables_length {
+    text-align: left;
+}
+
+div.dtpage .pagination > li > a, div.dtpage .pagination > li > span {
+    padding: 5px 10px 5px 10px;
+}
+
+.ztreeInput_terr {
+    border: 1px solid #dcdcdc;
+    height: 400px;
+    overflow-y: auto;
+    width: 400px;
+    display: none;
+    position: absolute;
+    z-index: 100;
+    background: #FFFFFF;
+}
+
+.ztreeInput_terr ul {
+    margin-top: 0;
+    background-color: #FFFFFF
+}
+
+.ztreeSelect_terr {
+    border: 1px solid #dcdcdc;
+    height: 400px;
+    overflow-y: auto;
+    width: 400px;
+    display: none;
+    position: absolute;
+    z-index: 100;
+    margin-left: 0px;
+    background: #FFFFFF;
+}
+
+.ztreeSelect_terr ul {
+    margin-top: 0;
+    background-color: #FFFFFF
+}
+
+.ztreeInput_ou {
+    border: 1px solid #dcdcdc;
+    height: 400px;
+    overflow-y: auto;
+    width: 400px;
+    display: none;
+    position: absolute;
+    z-index: 100;
+    background: #FFFFFF;
+}
+
+.ztreeInput_ou ul {
+    margin-top: 0;
+    background-color: #FFFFFF
+}
+
+select {
+    height: 34px;
+}
+
+.ztreeInput_staff {
+    border: 1px solid #dcdcdc;
+    height: 600px;
+    overflow-y: auto;
+    width: 400px;
+    display: none;
+    position: absolute;
+    z-index: 100;
+    background: #FFFFFF;
+}
+
+.ztreeInput_staff ul {
+    margin-top: 0;
+    background-color: #FFFFFF
+}
+
+.ztreeSearchInput {
+    margin-left: 10px;
+    padding: 3px;
+    margin-top: 10px;
+}
+
+#sidebar-menu i {
+    color: #008ECC;
+}
+
+#sidebar-menu i.menu {
+    color: #008ECC;
+}
+
+.form-group-view {
+    color: #444;
+    margin-top: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.form-group-view .form-label {
+    padding: 10px 5px 10px 5px;
+    font-weight: 700;
+    text-align: right;
+}
+
+.form-group-view .form-content {
+    padding: 10px 5px 10px 10px;
+    text-align: left;
+    background-color: #EEEEEE;
+    min-height: 32px;
+    border-radius: 5px;
+}
+
+.dt_d thead th {
+    text-align: center;
+}
+
+.dataTable thead th {
+    text-align: center;
+}
+
+.box-header .box-title {
+    font-weight: bolder;
+}
+
+.layui-layer-title {
+    font-weight: bolder;
+}
+
+.ui-step-green .step-active .ui-step-cont-number {
+    background-color: rgb(228, 108, 10);
+}
+
+.ui-step-green .step-active .ui-step-cont-text {
+    color: rgb(228, 108, 10);
+}
+
+select.select2 {
+    height: 32px;
+}
+
+.iframeItems iframe {
+    height: 100%;
+    width: 100%;
+}
+
+div.form-group-title {
+    border-bottom-style: solid;
+    border-bottom-width: 2px;
+    border-bottom-color: #DDDDDD;
+    width: 95%;
+    margin-bottom: 10px;
+    margin-left: 40px;
+}
+
+div.form-group-title label {
+
+    font-size: 17px;
+    font-weight: bolder;
+    color: #000000;
+}
+
+.group-view {
+    padding: 10px;
+}
+
+.group-view .control-label {
+    padding: 10px 5px 10px 5px;
+    font-weight: 700;
+    text-align: right;
+    width: 130px;
+    float: left;
+}
+
+.group-view .control-content {
+    padding: 10px 10px 10px 10px;
+    text-align: left;
+    background-color: #EEEEEE;
+    min-height: 32px;
+    border-radius: 5px;
+    margin-left: 130px;
+}
+
+.group-input {
+    padding: 10px;
+}
+
+.group-input .control-label {
+    padding: 10px 5px 10px 5px;
+    font-weight: 700;
+    text-align: right;
+    width: 130px;
+    float: left;
+}
+
+.group-input .control-content {
+    text-align: left;
+    min-height: 32px;
+    margin-left: 130px;
+}
+
+.skin-blue-light .main-header .logo {
+    background-color: #1b82da;
+    color: #fff;
+    border-bottom: 0 solid transparent;
+}
+
+.skin-blue-light .main-header .navbar {
+    background-color: #399af0;
+}
+
+.ui-step-green .step-reject .ui-step-cont-number {
+    background-color: #ff0000;
+}
+
+.ui-step-green .step-reject .ui-step-cont-text {
+    color: #ff0000;
+}
+
+.content-tabs .page-tabs a i.tab-icon {
+    color: #008ECC
+}
+
+.content-tabs .page-tabs a.active i.tab-icon {
+    color: #f39c12
+}
+
+/*
+.skin-green-light .main-header .navbar{
+	background-color: #009994;
+}
+.skin-green-light .main-header .logo {
+	background-color: #009994;
+}*/
+/*璁剧疆鑿滃崟涔嬮棿鐨勭缉杩�*/
+.sidebar-menu .treeview-menu > li > a.level2 {
+    padding: 5px 5px 5px 20px;
+    display: block;
+    font-size: 14px;
+}
+
+.sidebar-menu .treeview-menu > li > a.level3 {
+    padding: 5px 5px 5px 10px;
+    display: block;
+    font-size: 14px;
+}
+
+
+/*璁剧疆body鐨勮儗鏅壊*/
+body{
+    background-color: #fff;
+}
+/*璁剧疆椤电鐨勮儗鏅壊*/
+.content-tabs .page-tabs a.active{
+    background-color: #7CC7FF;
+    border-right: solid 1px #7CC7FF;
+}
+
+.content-tabs {
+    border-bottom: solid 2px #ddd;
+}
+.selectForm_dt .form-group .form-control{
+    width:230px;
+}

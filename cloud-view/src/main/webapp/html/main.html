@@ -1,0 +1,532 @@
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <meta id="csrf_token" content="efd03fce-f427-4b4d-8d4e-fbf976fa7269">
+    <link rel="shortcut icon" href="../styles/img/shortcut.ico">
+    <link rel="stylesheet" href="../styles/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../styles/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../styles/css/AdminLTE/third/ionicons.min.css">
+    <link rel="stylesheet" href="../styles/css/datatables/css/dataTables.bootstrap.min.css">
+    <link rel="stylesheet"
+          href="../styles/css/datatables/extensions/FixedHeader/css/fixedHeader.bootstrap.min.css">
+    <link rel="stylesheet"
+          href="../styles/css/datatables/extensions/FixedColumns/css/fixedColumns.bootstrap.min.css">
+    <link rel="stylesheet"
+          href="../styles/css/awesome-bootstrap-checkbox.css">
+    <link rel="stylesheet" href="../styles/css/all.css">
+    <link rel="stylesheet" href="../styles/css/switchery/switchery.min.css">
+    <link rel="stylesheet" href="../styles/css/jsTree/style.min.css">
+    <link rel="stylesheet" href="../styles/css/AdminLTE/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="../styles/css/AdminLTE/css/skins/_all-skins.min.css">
+    <link rel="stylesheet" href="../styles/css/square/blue.css">
+    <link rel="stylesheet" href="../styles/css/select2/select2.min.css">
+    <link rel="stylesheet" href="../styles/css/loadmask/jquery.loadmask.css">
+    <link rel="stylesheet" href="../styles/css/datepicker/datepicker3.min.css">
+    <link rel="stylesheet" href="../styles/css/datetimepicker/bootstrap-datetimepicker.min.css">
+    <link rel="stylesheet" href="../styles/css/sweetalert/sweetalert.min.css">
+    <link rel="stylesheet" href="../styles/css/toastr/toastr.min.css">
+    <link rel="stylesheet" href="../styles/css/layui/css/layui.css">
+    <link rel="stylesheet" href="../styles/css/app/app.main.min.css">
+    <link rel="stylesheet" href="../styles/css/step.css">
+    <link rel="stylesheet" href="../styles/css/app/iframe.min.css">
+    <link rel="stylesheet" href="../styles/css/app/project.main.css">
+    <link rel="stylesheet" href="../styles/css/element-ui.css">
+    <title>教学过程管理系统</title>
+    <style type="text/css">
+        html {
+            overflow: hidden;
+        }
+    </style>
+    <style type="text/css">span.im-caret {
+        -webkit-animation: 1s blink step-end infinite;
+        animation: 1s blink step-end infinite;
+    }
+
+    @keyframes blink {
+        from, to {
+            border-right-color: black;
+        }
+        50% {
+            border-right-color: transparent;
+        }
+    }
+
+    @-webkit-keyframes blink {
+        from, to {
+            border-right-color: black;
+        }
+        50% {
+            border-right-color: transparent;
+        }
+    }
+
+    span.im-static {
+        color: grey;
+    }
+
+    div.im-colormask {
+        display: inline-block;
+        border-style: inset;
+        border-width: 2px;
+        -webkit-appearance: textfield;
+        -moz-appearance: textfield;
+        appearance: textfield;
+    }
+
+    div.im-colormask > input {
+        position: absolute;
+        display: inline-block;
+        background-color: transparent;
+        color: transparent;
+        -webkit-appearance: caret;
+        -moz-appearance: caret;
+        appearance: caret;
+        border-style: none;
+        left: 0; /*calculated*/
+    }
+
+    div.im-colormask > input:focus {
+        outline: none;
+    }
+
+    div.im-colormask > input::-moz-selection {
+        background: none;
+    }
+
+    div.im-colormask > input::selection {
+        background: none;
+    }
+
+    div.im-colormask > input::-moz-selection {
+        background: none;
+    }
+
+    div.im-colormask > div {
+        color: black;
+        display: inline-block;
+        width: 100px; /*calculated*/
+    }</style>
+    <style type="text/css">.jqstooltip {
+        position: absolute;
+        left: 0px;
+        top: 0px;
+        visibility: hidden;
+        background: rgb(0, 0, 0) transparent;
+        background-color: rgba(0, 0, 0, 0.6);
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000);
+        -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000)";
+        color: white;
+        font: 10px arial, san serif;
+        text-align: left;
+        white-space: nowrap;
+        padding: 5px;
+        border: 1px solid white;
+        z-index: 10000;
+    }
+
+    .jqsfield {
+        color: white;
+        font: 10px arial, san serif;
+        text-align: left;
+    }
+    </style>
+    <link id="layuicss-layer" rel="stylesheet"
+          href="../styles/css/layui/css/modules/layer/default/layer.css?v=3.1.1"
+          media="all">
+</head>
+<body class="skin-blue-light sidebar-mini fixed" style="height: auto;">
+
+<div id="app">
+
+<header class="main-header" style="background-color: rgb(87, 11, 187)">
+    <a href="javascript:void(0);" onclick="addDashboard();" class="logo" style="background-color: rgb(87, 11, 187)">
+        <span class="logo-mini" title="Organon MDM">
+        	<b>MDM</b>
+        </span>
+        <span class="logo-lg" title="Organon MDM">
+       		<b>教学过程管理系统</b>
+        </span>
+    </a>
+    <nav class="navbar navbar-static-top" style="background-color: rgb(87, 11, 187)">
+        <a href="javascript:void(0);" class="sidebar-toggle" onclick="setMfalg();" data-toggle="offcanvas"
+           role="button">
+            <span class="sr-only">Toggle navigation</span>
+        </a>
+        <div class="navbar-custom-menu">
+            <ul class="nav navbar-nav">
+                <li style="display: none;">
+                    <a href="javascript:void(0);">
+                        <span class="fa fa-clock-o" id="clock"></span>
+                    </a>
+                </li>
+                <li class="dropdown notifications-menu" style="display: none;">
+                    <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown">
+                        <i class="fa fa-envelope-o"></i>
+                        <span class="label label-warning" id="message_num">0</span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <div class="slimScrollDiv"
+                                 style="position: relative; overflow: hidden; width: auto; height: 200px;">
+                                <ul class="menu" id="messagelist" style="overflow: hidden; width: 100%; height: 200px;">
+                                </ul>
+                                <div class="slimScrollBar"
+                                     style="background: rgb(0, 0, 0); width: 3px; position: absolute; top: 0px; opacity: 0.4; display: block; border-radius: 7px; z-index: 99; right: 1px;"></div>
+                                <div class="slimScrollRail"
+                                     style="width: 3px; height: 100%; position: absolute; top: 0px; display: none; border-radius: 7px; background: rgb(51, 51, 51); opacity: 0.2; z-index: 90; right: 1px;"></div>
+                            </div>
+                        </li>
+                    </ul>
+                </li>
+                <li class="dropdown notifications-menu" style="display: none;">
+                    <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown">
+                        <i class="fa fa-bell-o"></i>
+                        <span class="label label-warning" id="todolist_num"></span>
+                    </a>
+                    <ul class="dropdown-menu" style="min-height: 100px">
+                        <li>
+                            <div class="slimScrollDiv"
+                                 style="position: relative; overflow: hidden; width: auto; height: 200px;">
+                                <ul class="menu" id="todolist" style="overflow: hidden; width: 100%; height: 200px;">
+                                </ul>
+                                <div class="slimScrollBar"
+                                     style="background: rgb(0, 0, 0); width: 3px; position: absolute; top: 0px; opacity: 0.4; display: block; border-radius: 7px; z-index: 99; right: 1px;"></div>
+                                <div class="slimScrollRail"
+                                     style="width: 3px; height: 100%; position: absolute; top: 0px; display: none; border-radius: 7px; background: rgb(51, 51, 51); opacity: 0.2; z-index: 90; right: 1px;"></div>
+                            </div>
+                        </li>
+                    </ul>
+                </li>
+                <li class="dropdown user user-menu">
+                    <!--  <a th:href="@{/sysadmin/user/profile}"></a> -->
+                    <a @click="openEditPassword()" ><span class="fa fa-user"></span> &nbsp;&nbsp;<span>{{this.userInfo}}</span></a>
+                </li>
+
+                <li>
+                    <a href="javascript:void(0);" onclick="out()">
+                        <span class="fa fa-sign-out"></span> &nbsp;&nbsp;退出
+                    </a>
+                    <form action="/logout" method="post" id="logoutform"><input type="hidden" name="_csrf"
+                                                                                value="efd03fce-f427-4b4d-8d4e-fbf976fa7269">
+                    </form>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</header>
+
+<aside class="main-sidebar">
+    <div class="slimScrollDiv" style="position: relative; overflow: hidden; width: auto; height: 228px;">
+        <section class="sidebar" style="height: 228px; overflow: hidden; width: auto;" id="sidebar-menu">
+            <ul class="sidebar-menu" >
+                <li class="treeview" v-for="m in menuList" :id="m.id" >
+                    <a href="javascript:void(0);" class="level1" url="###" :label="m.title" :icon="m.icon">
+                        <i :class="m.icon"></i>
+                        <span>{{m.title}}</span>
+                        <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li v-for="m2 in m.children">
+                            <a :id="m2.id" class="level2" :url="m2.url" @click="dianwo(m2.id,m2.url,m2.title,m2.icon)"
+                               :label="m2.title" :icon="m2.icon">
+                                <i :class="m2.icon"></i><span>{{m2.title}}</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </section>
+        <div class="slimScrollBar"
+             style="background: rgba(0, 0, 0, 0.2); width: 3px; position: absolute; top: 0px; opacity: 0.4; display: block; border-radius: 7px; z-index: 99; right: 1px; height: 198.412px;"></div>
+        <div class="slimScrollRail"
+             style="width: 3px; height: 100%; position: absolute; top: 0px; display: none; border-radius: 7px; background: rgb(51, 51, 51); opacity: 0.2; z-index: 90; right: 1px;"></div>
+    </div>
+</aside>
+
+<div class="content-wrapper" id="content-wrapper" style="min-height: 235px;">
+    <!--bootstrap tab风格 多标签页-->
+    <div class="content-tabs">
+        <button class="roll-nav roll-left tabLeft" onclick="scrollTabLeft()">
+            <i class="fa fa-backward"></i>
+        </button>
+        <nav class="page-tabs menuTabs tab-ui-menu" id="tab-menu">
+            <div class="page-tabs-content" style="margin-left: 0px;">
+                <a href="javascript:void(0);" data-pageid="dashboard" class="menu_tab active"><i
+                        class="fa fa-dashboard tab-icon" ></i> <span class="page_tab_title">Dashboard</span></a></div>
+        </nav>
+        <button class="roll-nav roll-right tabRight" onclick="scrollTabRight()">
+            <i class="fa fa-forward" style="margin-left: 3px;"></i>
+        </button>
+        <div class="btn-group roll-nav roll-right">
+            <button class="dropdown tabClose" data-toggle="dropdown">页签操作<i class="fa fa-caret-down"
+                                                                            style="padding-left: 3px;"></i>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-right" style="min-width: 128px;">
+                <li><a class="tabReload" href="javascript:refreshTab();">刷新当前</a></li>
+                <li><a class="tabCloseCurrent" href="javascript:closeCurrentTab();">关闭当前</a></li>
+                <li><a class="tabCloseAll" href="javascript:closeOtherTabs(true);">全部关闭</a></li>
+                <li><a class="tabCloseOther" href="javascript:closeOtherTabs();">除此之外全部关闭</a></li>
+            </ul>
+        </div>
+        <button class="roll-nav roll-right fullscreen" onclick="App.handleFullScreen()"><i class="fa fa-arrows-alt"></i>
+        </button>
+    </div>
+    <div class="content-iframe">
+        <div class="tab-content " id="tab-content" style="">
+            <div role="tabpanel" class="tab-pane active" data-pageid="dashboard">
+                <iframe src="/html/dashboard.html" frameborder="no" id="iframe_dashboard" class="tab_iframe"
+                        data-pageid="dashboard" style="width: 100%; height: 100%;"></iframe>
+            </div>
+        </div>
+    </div>
+</div>
+<footer class="main-footer">
+    <div class="pull-right hidden-xs" style="padding-left: 10px;margin-top: -10px;"></div>
+    <div class="pull-right hidden-xs"><b>Version</b> 1.2</div>
+    <span><strong>Copyright © 2018-2088 <a href="###">子龙科技</a>.</strong> All rights reserved.</span>
+</footer>
+<ul class="dropdown-menu dropdown-context compressed-context" id="dropdown-1666663133924">
+    <li><a tabindex="-1" href="#" class="context-event">刷新</a></li>
+    <li><a tabindex="-1" href="#" class="context-event">在新窗口打开</a></li>
+</ul>
+<div class="layui-layer-move"></div>
+    <el-dialog  title="修改密码" :visible.sync="dialogFormVisibleAdd">
+        <el-form :model="form" :rules="rules" ref="ruleForm" >
+            <el-form-item label="密码" :label-width="formLabelWidth"  prop="password">
+                <el-input type="password" v-model="form.password" autocomplete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="确认密码" :label-width="formLabelWidth"  prop="password1">
+                <el-input type="password" v-model="form.password1" autocomplete="off"></el-input>
+            </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+            <el-button @click="dialogFormVisibleAdd = false">取 消</el-button>
+            <el-button type="primary" @click="saveUserBtn('ruleForm')">确 定</el-button>
+        </div>
+    </el-dialog>
+</div>
+</body>
+</html>
+<script>
+    var ctp = "";
+    var DT_pageLength = 10;
+    var user_cnname = "\u8D85\u7EA7\u7BA1\u7406\u5458";
+    var user_name = "root";
+    var app_name = "Organon MDM";
+    var user_language = "zh_CN";
+    sessionStorage.setItem("user_name", user_name);
+    var WebSite_Flag = 2;
+</script>
+<script type="text/javascript">
+    var DT_aLengthMenu = [
+        [10, 20, 50, 100, 200],
+        [10, 20, 50, 100, 200]
+    ];
+</script>
+<script src="../styles/js/jQuery/jquery.min.js"></script>
+<script src="../styles/js/jQuery/jquery.cookie.js"></script>
+<script src="../styles/js/bootstrap/js/bootstrap.min.js"></script>
+<script src="../styles/js/fastclick/fastclick.js"></script>
+<script src="../styles/js/sparkline/jquery.sparkline.min.js"></script>
+<script src="../styles/js/slimScroll/jquery.slimscroll.min.js"></script>
+<script src="../styles/js/datatables/js/jquery.dataTables.min.js"></script>
+<script src="../styles/js/datatables/js/dataTables.bootstrap.min.js"></script>
+<script src="../styles/js/datatables/extensions/FixedHeader/js/dataTables.fixedHeader.min.js"></script>
+<script src="../styles/js/datatables/extensions/FixedColumns/js/dataTables.fixedColumns.min.js"></script>
+<script src="../styles/js/iCheck/icheck.min.js"></script>
+<script src="../styles/js/select2/select2.full.min.js"></script>
+<script src="../styles/js/select2/i18n/zh_CN.js"></script>
+<script src="../styles/js/loadmask/jquery.loadmask.js"></script>
+<script src="../styles/css/sweetalert/sweetalert.min.js"></script>
+<script src="../styles/js/form/jquery.form.min.js"></script>
+<script src="../styles/css/toastr/toastr.min.js"></script>
+<script src="../styles/css/jsTree/jstree.min.js"></script>
+<script src="../styles/js/validate/jquery.metadata.js"></script>
+<script src="../styles/js/validate/jquery.validate.js"></script>
+<script src="../styles/js/validate/additional-methods.min.js"></script>
+<script src="../styles/js/validate/locale/messages_zh_CN.js"></script>
+<script src="../styles/css/datepicker/bootstrap-datepicker.min.js"></script>
+<script src="../styles/css/datepicker/locales/bootstrap-datepicker.zh_CN.js"></script>
+<script src="../styles/css/datetimepicker/bootstrap-datetimepicker.min.js"></script>
+<script src="../styles/css/datetimepicker/locale/bootstrap-datetimepicker.zh_CN.js"></script>
+<script src="../styles/js/inputmask/min/jquery.inputmask.bundle.min.js"></script>
+<script src="../styles/js/inputmask/min/inputmask.numeric.extensions.min.js"></script>
+<script src="../styles/css/layui/layui.js"></script>
+<script src="../styles/css/AdminLTE/js/app.min.js"></script>
+<script src="../styles/js/jqfun.main.js"></script>
+<script src="../styles/js/main.min.js"></script>
+<script src="../styles/js/app.main.zh_CN.js"></script>
+<script src="../styles/js/app.main.min.js"></script>
+<script src="../styles/js/frame.init.min.js"></script>
+<script src="../styles/js/app_iframe.min.js"></script>
+<script src="../styles/js/jquery.watermark.js"></script>
+<script src="../styles/js/stomp.min.js"></script>
+<script src="../styles/js/queue.js" charset="utf-8"></script>
+<script src="../styles/js/vue.js"></script>
+<script src="../styles/js/element.js"></script>
+<script src="../styles/js/axios.js"></script>
+<script src="../styles/js/httpRequest.js"></script><script>
+    new Vue({
+        el:"#app",
+        data:function (){
+            return{
+                menuList:[],
+                userInfo:localStorage.getItem("userInfo"),
+                dialogFormVisibleAdd:false,
+                formLabelWidth:"120px",
+                form:{},
+                ruleForm: {
+                    name: '',
+                    password: '',
+                },
+                rules: {
+                    password: [
+                        { required: true, message: '请输入密码', trigger: 'blur' },
+                    ],
+                    password1: [
+                        { required: true, message: '请输入确认密码', trigger: 'blur' },
+                    ],
+                },
+            }
+        },
+        methods:{
+            initMenus(){
+                axiosGetRequest("/user-role/findMenus").then(res=>{
+                    this.menuList=res
+                })
+            },
+            dianwo(a,a2,a3,a4){
+                addTabs({id: a, title: a3, close: true, icon: a4, url: a2, urlType: "relative"});
+                App.fixIframeCotent();
+            },
+            openEditPassword(){
+                this.dialogFormVisibleAdd=true
+            },
+            saveUserBtn(formName){
+                this.$refs[formName].validate((valid) => {
+                    if (valid) {
+                        if (this.form.password===this.form.password1){
+                            axiosGetRequest(`/user/updatePassword/${this.form.password}`).then(res=>{
+                                this.dialogFormVisibleAdd=false;
+                                if (res.code===20000){
+                                    this.$message.success(res.message+",请注销后重新登录!")
+
+                                }else {
+                                    this.$message.error(res.message)
+                                }
+                            })
+                        }else {
+                            this.$message.error('密码不一致')
+                        }
+                    } else {
+                        return false;
+                    }
+                });
+            }
+        },
+        mounted(){
+            this.initMenus()
+        }
+    })
+</script>
+<script type="text/javascript">
+
+
+    function search_menu() {
+        console.log("123")
+        var text = $('input[name=q]').val();
+        var $ul = $('.sidebar-menu');
+        $ul.find("a.nav-link").each(function () {
+            var $a = $(this).css("border", "");
+            //判断是否含有要搜索的字符串
+            if ($a.children("span.menu-text").text().indexOf(text) >= 0) {
+                //如果a标签的父级是隐藏的就展开
+                $ul = $a.parents("ul");
+                if ($ul.is(":hidden")) {
+                    $a.parents("ul").prev().click();
+                }
+                $a.click().css("border", "1px solid");
+
+            }
+        });
+    }
+
+    function addDashboard() {
+        addTabs({
+            id: 'dashboard',
+            title: 'Dashboard',
+            close: false,
+            url: '/dashboard',
+            urlType: "relative"
+        });
+    }
+
+    function addUserProfile() {
+        addTabs({
+            id: 'UserProfile',
+            title: '个人设置',
+            close: true,
+            url: '/sysadmin/user/profile',
+            urlType: "relative"
+        });
+    }
+
+    function changeUserLanguage(lang) {
+        var title = "请确认您的操作！";
+        if (lang == 'zh_CN') {
+
+        }
+        $.ajaxOperation('/sysadmin/user/changeLang', 'lang=' + lang, function (msg) {
+            if (msg.success) {
+                $.cookie('lang', lang, {expires: 30}); // 存储 cookie 
+                window.location.reload();
+            }
+        });
+    }
+
+    String.prototype.startsWith = String.prototype.startsWith || function (str) {
+        var reg = new RegExp("^" + str);
+        return reg.test(this);
+    }
+    String.prototype.endsWith = String.prototype.endsWith || function (str) {
+        var reg = new RegExp(str + "$");
+        return reg.test(this);
+    }
+    function getCookie(name){
+        var arr, reg = new RegExp("(^| )" + name + "=([^;]*)(;|$)");
+        if (arr = document.cookie.match(reg)){
+            return (arr[2]);
+        }else{
+            return null;
+        }
+    }
+
+
+    function todolistFlushIframe() {
+        $("small.todoP").remove();
+        //todolistIframe(1);
+    }
+
+    function topAddTabs(id, title, url, icon) {
+        addTabs({
+            id: id,
+            title: title,
+            close: true,
+            url: url,
+            icon: icon,
+            urlType: "relative"
+        });
+    }
+
+    //退出登录 清楚cookie
+    function out(){
+        var date = new Date();
+        date.setTime(date.getTime()- 10000);
+        document.cookie=  "Authorization=a; expires=" +date.toGMTString();
+        location.href='/html/login.html'
+    }
+
+</script>
+

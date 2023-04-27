@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+<!--    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">-->
+    <link rel="stylesheet" href="../../styles/css/element-ui.css">
+</head>
+<body>
+    <div id="app">
+        <el-form style="margin-left: 20px;margin-top: 20px" :inline="true" :model="search" class="demo-form-inline">
+            <el-form-item label="角色">
+                <el-input v-model="search.valueOne" placeholder="请输入角色名称"></el-input>
+            </el-form-item>
+            <el-form-item>
+                <el-button type="primary" @click="initRoleList()"> <i class="fa fa-search"></i> 查询</el-button>
+            </el-form-item>
+            <el-form-item>
+                <el-button type="primary" @click="clearSearch()"> <i class="el-icon-refresh-left"></i> 重置</el-button>
+            </el-form-item>
+            <el-button type="success"  @click="oppenAddDialog()"> <i class="el-icon-plus"></i> 新增</el-button>
+        </el-form>
+
+
+        <el-dialog  title="用户列表" :visible.sync="dialogFormVisibleTable">
+            <el-table
+                    :data="userList"
+                    style="width: 100%">
+                <el-table-column
+                        prop="name"
+                        label="账号">
+                </el-table-column>
+                <el-table-column
+                        prop="createTime"
+                        label="创建时间">
+                </el-table-column>
+            </el-table>
+        </el-dialog>
+
+        <el-dialog  title="新增角色" :visible.sync="dialogFormVisible">
+            <el-form :model="form" :rules="rules" ref="ruleForm" >
+                <el-form-item label="角色名称" :label-width="formLabelWidth"  prop="name">
+                    <el-input  v-model="form.name" autocomplete="off"></el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="dialogFormVisible = false">取 消</el-button>
+                <el-button type="primary" @click="saveRoleBtn('ruleForm')">确 定</el-button>
+            </div>
+        </el-dialog>
+
+        <el-dialog  title="分配菜单" :visible.sync="dialogFormMenu">
+
+            <el-tree class="org-tree"
+                     ref="orgTree"
+                     :data="data"
+                     :props="defaultProps"
+                     node-key="id"
+                     show-checkbox
+                     :default-expanded-keys="jdexpandedKeys"
+                     :default-checked-keys="jdStreet"
+                     :render-after-expand="true"
+                     :expand-on-click-node="false"
+                     :highlight-current="true">
+            </el-tree>
+
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="dialogFormMenu = false">取 消</el-button>
+                <el-button type="primary" @click="handleCheck()">确 定</el-button>
+            </div>
+        </el-dialog>
+
+
+        <el-table
+                :data="tableData"
+                border>
+            <el-table-column
+                    fixed
+                    prop="date"
+                    label="序号"
+                    width="50">
+                <template slot-scope="scope">
+                    {{scope.$index+1}}
+                </template>
+            </el-table-column>
+            <el-table-column
+                    fixed
+                    prop="name"
+                    label="角色名称"
+                    width="150">
+            </el-table-column>
+            <el-table-column
+                    label="状态">
+                <template slot-scope="scope">
+                    <el-tag  v-if="scope.row.status==='ACTIVE'" type="success">启用</el-tag>
+                    <el-tag  v-if="scope.row.status!=='ACTIVE'" type="danger">禁用</el-tag>
+                </template>
+            </el-table-column>
+            <el-table-column
+                    label="分配菜单">
+                <template slot-scope="scope">
+                    <font size="4" color="#00c0ef">
+                        <i class="el-icon-s-unfold" @click="disMenu(scope.row.id)"></i>
+                    </font>
+                </template>
+            </el-table-column>
+            <el-table-column
+                    label="关联用户">
+                <template slot-scope="scope">
+                    <font size="4" color="#00a600">
+                        <i class="el-icon-user-solid" @click="relationUser(scope.row.id)"></i>
+                    </font>
+                </template>
+            </el-table-column>
+            <el-table-column
+                    prop="createTime"
+                    label="创建时间">
+            </el-table-column>
+            <el-table-column
+                    prop="updateTime"
+                    label="更新时间">
+            </el-table-column>
+            <el-table-column
+                    fixed="right"
+                    label="操作"
+                    width="150">
+                <template slot-scope="scope">
+                    <el-button
+                            size="mini"
+                            @click="handleEdit(scope.row.id)">编辑</el-button>
+                    <el-button
+                            size="mini"
+                            type="danger"
+                            @click="handleDelete(scope.row.id)">删除</el-button>
+                </template>
+            </el-table-column>
+        </el-table>
+
+        <el-pagination
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+                :current-page="search.pageNumber"
+                :page-sizes="[5,10]"
+                :page-size="search.pageCount"
+                layout="total, sizes, prev, pager, next, jumper"
+                :total="total">
+        </el-pagination>
+
+    </div>
+</body>
+</html>
+<link rel="stylesheet" href="../../styles/css/font-awesome.min.css">
+<script src="../../styles/js/vue.js"></script>
+<script src="../../styles/js/element.js"></script>
+<script src="../../styles/js/axios.js"></script>
+<script src="../../styles/js/httpRequest.js"></script>
+<script>
+    new Vue({
+        el:"#app",
+        data:function (){
+            return{
+                ruleForm: {
+                    name: '',
+                },
+                rules: {
+                    name: [
+                        { required: true, message: '请输入角色名称', trigger: 'blur' },
+                    ],
+                },
+                form:{},
+                formLabelWidth:'120px',
+                tableData: [],
+                dialogFormVisible:false,
+                dialogFormVisibleTable:false,
+                dialogFormMenu:false,
+                search:{
+                    pageNumber:1,
+                    pageCount:5
+                },
+                total:0,
+                id:{},
+                data: [],
+                defaultProps: {
+                    children: 'children',
+                    label: 'label'
+                },
+                //tree展开标签
+                jdexpandedKeys:[],
+                //tree回显
+                jdStreet:[],
+                rid:0,
+                flag:true,
+                userList:[]
+            }
+        },
+        methods:{
+            handleSizeChange(val) {
+                this.search.pageCount=val;
+                this.initRoleList();
+            },
+            handleCurrentChange(val) {
+                this.search.pageNumber=val;
+                this.initRoleList();
+            },
+            //新增角色
+            saveRoleBtn(formName) {
+                this.$refs[formName].validate((valid) => {
+                    if (valid) {
+                       if (this.flag){
+                           axiosPostRequest("/role/saveRole",this.form).then(res=>{
+                               this.dialogFormVisible=false;
+                               if (res.code===20000){
+                                   this.$message.success(res.message)
+                                   this.initRoleList();
+                               }else {
+                                   this.$message.error(res.message)
+                               }
+                           })
+                       }else {
+                           axiosPostRequest("/role/updateRole",this.form).then(res=>{
+                               this.dialogFormVisible=false;
+                               if (res.code===20000){
+                                   this.$message.success(res.message)
+                                   this.initRoleList();
+                               }else {
+                                   this.$message.error(res.message)
+                               }
+                           })
+                       }
+                    } else {
+                        return false;
+                    }
+                });
+            },
+            //角色列表查询
+            initRoleList(){
+                axiosPostRequest("/role/findPage",this.search).then(res=>{
+                    this.tableData=res.records
+                    this.total=res.total
+                })
+            },
+            //分配菜单
+            disMenu(id){
+                this.rid=id;
+                //查询要回显的菜单
+                axiosGetRequest(`/role-permission/findMenuIdByRid/${this.rid}`).then(res=>{
+                    this.jdStreet=res;
+                })
+                // jdexpandedKeys
+                //查询需要展开的父标签
+                axiosGetRequest(`/permission/findAllId`).then(res=>{
+                    this.jdexpandedKeys=res;
+                })
+
+                //查询所有菜单
+                axiosGetRequest("/permission/findTree").then(res=>{
+                    this.data=res
+                })
+                this.dialogFormMenu=true
+            },
+            //关联用户
+            relationUser(id){
+                this.dialogFormVisibleTable=true
+                axiosGetRequest(`/user-role/findUserListByRid/${id}`).then(res=>{
+                    this.userList=res;
+                })
+            },
+            //获取数据方法
+            handleCheck(data, checked, indeterminate) {
+                //tree选中数组
+                let o = this.$refs.orgTree.getCheckedKeys().concat(this.$refs.orgTree.getHalfCheckedKeys())
+
+                //保存角色权限
+                axios.get(`/role-permission/saveRolePermission/${this.rid}?pids=`+o.toString()).then(res => {
+                    if (res.data.code===20000){
+                        this.dialogFormMenu=false;
+                        this.$message.success(res.data.message)
+                        this.initRoleList();
+                    }else {
+                        this.$message.error(res.data.message)
+                    }
+                })
+            },
+            clearSearch(){
+                this.search={
+                    pageNumber:1,
+                    pageCount:5
+                }
+                this.initRoleList();
+            },
+            oppenAddDialog(){
+                this.flag=true;
+                this.dialogFormVisible=true;
+                this.form={}
+            },
+            //回显信息
+            handleEdit(id){
+                this.dialogFormVisible=true;
+                this.flag=false;
+                axiosGetRequest(`/role/findById/${id}`).then(res=>{
+                    this.form=res
+                })
+            },
+            //删除角色
+            handleDelete(id){
+                this.$confirm('此操作将永久删除该角色, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    axiosGetRequest(`/role/deleteById/${id}`).then(res=>{
+                        if (res.code===20000){
+                            this.$message.success(res.message)
+                            this.initRoleList();
+                        }else {
+                            this.$message.error(res.message)
+                        }
+                    })
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
+            }
+        },
+        created(){
+            this.initRoleList();
+        }
+    })
+</script>

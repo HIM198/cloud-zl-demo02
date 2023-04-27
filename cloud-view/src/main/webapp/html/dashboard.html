@@ -1,0 +1,41 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="../styles/css/element-ui.css">
+</head>
+<body style="color: rgb(236, 240, 245);">
+<!--    <div id="app">-->
+<!--        <el-calendar v-model="value">-->
+<!--        </el-calendar>-->
+<!--    </div>-->
+</body>
+</html>
+<link rel="stylesheet" href="../styles/css/font-awesome.min.css">
+<script src="../styles/js/vue.js"></script>
+<script src="../styles/js/element.js"></script>
+<script src="../styles/js/axios.js"></script>
+<script src="../styles/js/httpRequest.js"></script>
+<script>
+    new Vue({
+        el:"#app",
+        data:function (){
+            return{
+                value: new Date()
+            }
+        },
+        methods:{
+
+        },
+        created(){
+
+        }
+    })
+</script>
+<style>
+    .el-calendar{
+        width: 100%;
+        height: 100%;
+        color: red;
+    }
+</style>

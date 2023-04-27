@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="../../styles/css/element-ui.css">
+</head>
+<body>
+    <div id="app">
+        <el-form style="margin-left: 20px;margin-top: 20px" :inline="true" :model="search" class="demo-form-inline">
+            <el-form-item label="方案标题">
+                <el-input v-model="search.valueOne" placeholder="请输入方案标题"></el-input>
+            </el-form-item>
+            <el-form-item>
+                <el-button type="primary" @click="initList()"> <i class="fa fa-search"></i> 查询</el-button>
+            </el-form-item>
+            <el-form-item>
+                <el-button type="primary" @click="clearSearch()"> <i class="el-icon-refresh-left"></i> 重置</el-button>
+            </el-form-item>
+            <el-button type="success"  @click="oppenAddDialog()"> <i class="el-icon-plus"></i> 新增</el-button>
+        </el-form>
+
+        <el-dialog  title="新增实施方案" :visible.sync="dialogFormVisibleAdd">
+            <el-form :model="form" :rules="rules" ref="ruleForm" >
+                <el-form-item  label="文件" :label-width="formLabelWidth" >
+                    <el-upload
+                            class="upload-demo"
+                            action="/import/upload"
+                            :on-preview="handlePreview"
+                            :on-remove="handleRemove"
+                            :before-remove="beforeRemove"
+                            multiple
+                            :limit="1"
+                            :on-exceed="handleExceed"
+                            :on-success="saveImgUrl"
+                            :file-list="fileList">
+                        <el-button size="small" type="primary">点击上传</el-button>
+                    </el-upload>
+                </el-form-item>
+                <el-form-item v-if="flag===false" label="文件名称" :label-width="formLabelWidth" >
+                    <el-input  disabled  v-model="form.fileName" autocomplete="off"></el-input>
+                </el-form-item>
+                <el-form-item  v-if="flag===false" label="文件地址" :label-width="formLabelWidth" >
+                    <el-input disabled  v-model="form.filePath" autocomplete="off"></el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="dialogFormVisibleAdd = false">取 消</el-button>
+                <el-button type="primary" @click="saveBtn('ruleForm')">确 定</el-button>
+            </div>
+        </el-dialog>
+
+        <el-table
+                :data="tableData"
+                border>
+            <el-table-column
+                    prop="date"
+                    label="序号">
+                <template slot-scope="scope">
+                    {{scope.$index+1}}
+                </template>
+            </el-table-column>
+            </el-table-column>
+            <el-table-column
+                    label="教师名称">
+                <template slot-scope="scope">
+                    {{scope.row.teacher.name}}
+                </template>
+            </el-table-column>
+            <el-table-column
+                    label="文件名称">
+                <template slot-scope="scope">
+                    <span @click="downloadFile(scope.row.fileName,scope.row.filePath)"><font color="blue">{{scope.row.fileName}}</font></span>
+                </template>
+            </el-table-column>
+            <el-table-column
+                    prop="filePath"
+                    label="文件地址">
+            </el-table-column>
+            <el-table-column
+                    prop="createTime"
+                    label="创建时间">
+            </el-table-column>
+            <el-table-column
+                    prop="updateTime"
+                    label="修改时间">
+            </el-table-column>
+            <el-table-column
+                    fixed="right"
+                    label="操作">
+                <template slot-scope="scope">
+                    <el-button
+                            size="mini"
+                            @click="handleEdit(scope.row.id)">编辑</el-button>
+                    <el-button
+                            size="mini"
+                            type="danger"
+                            @click="handleDelete(scope.row.id)">删除</el-button>
+                </template>
+            </el-table-column>
+        </el-table>
+
+        <el-pagination
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+                :current-page="search.pageNumber"
+                :page-sizes="[5,10]"
+                :page-size="search.pageCount"
+                layout="total, sizes, prev, pager, next, jumper"
+                :total="total">
+        </el-pagination>
+    </div>
+</body>
+</html>
+<link rel="stylesheet" href="../../styles/css/font-awesome.min.css">
+<script src="../../styles/js/vue.js"></script>
+<script src="../../styles/js/element.js"></script>
+<script src="../../styles/js/axios.js"></script>
+<script src="../../styles/js/httpRequest.js"></script>
+<script>
+    new Vue({
+        el:"#app",
+        data:function (){
+            return{
+                form:{
+                    type:"课程设计方案",
+                    status:"待审核"
+                },
+                tableData:[],
+                search:{
+                    pageNumber:1,
+                    pageCount:5,
+                    valueTwo:'课程设计方案'
+                },
+                total:0,
+                dialogFormVisible:false,
+                dialogFormVisibleAdd:false,
+                formLabelWidth:'120px',
+                multipleSelection: [],
+                roleList: [],
+                tableDataPro:[],
+                ruleForm: {},
+                rules: {},
+                flag:true,
+                villList:[],
+            }
+        },
+        methods:{
+            //列表查询
+            initList(){
+                axiosPostRequest("/public-excel/findPage",this.search).then(res=>{
+                    this.tableData=res.records
+                    this.total=res.total
+                })
+            },
+            handleSizeChange(val) {
+                this.search.pageCount=val;
+                this.initList();
+            },
+            handleCurrentChange(val) {
+                this.search.pageNumber=val;
+                this.initList();
+            },
+            //编辑
+            handleEdit(id){
+                this.flag=false;
+                this.dialogFormVisibleAdd=true;
+                axiosGetRequest(`/public-excel/findById/${id}`).then(res=>{
+                    this.form=res;
+                })
+            },
+            //删除
+            handleDelete(id){
+                this.$confirm('此操作将永久删除该实施方案, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                   axiosGetRequest(`/public-excel/deleteById/${id}`).then(res=>{
+                       if (res.code===20000){
+                           this.$message.success(res.message)
+                           this.initList();
+                       }else {
+                           this.$message.error(res.message)
+                       }
+                   })
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
+            },
+            //跳转到添加页
+            oppenAddDialog(){
+                this.flag=true;
+                this.form={
+                    type:"课程设计方案",
+                    status:"待审核",
+                };
+                this.dialogFormVisibleAdd=true;
+            },
+            //新增或修改
+            saveBtn(formName){
+                this.$refs[formName].validate((valid) => {
+                    if (valid) {
+                       if (this.flag){
+                           axiosPostRequest("/public-excel/save",this.form).then(res=>{
+                               this.dialogFormVisibleAdd=false;
+                               if (res.code===20000){
+                                   this.$message.success(res.message)
+                                   this.initList();
+                               }else {
+                                   this.$message.error(res.message)
+                               }
+                           })
+                       }else {
+                           axiosPostRequest("/public-excel/update",this.form).then(res=>{
+                               this.dialogFormVisibleAdd=false;
+                               if (res.code===20000){
+                                   this.$message.success(res.message)
+                                   this.initList();
+                               }else {
+                                   this.$message.error(res.message)
+                               }
+                           })
+                       }
+                    } else {
+                        return false;
+                    }
+                });
+            },
+            handleSelectionChange(val) {
+                this.multipleSelection = val;
+            },
+            //重置查询框
+            clearSearch(){
+                this.search={
+                    pageNumber:1,
+                    pageCount:5,
+                    valueTwo:'课程设计方案'
+                }
+                this.initList();
+            },
+            //图片上传 start
+            handleRemove(file, fileList) {
+                this.url=''
+            },
+            handlePreview(file) {
+                console.log(123,file);
+            },
+            handleExceed(files, fileList) {
+                console.log(files)
+                console.log(fileList)
+                this.$message.warning(`当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
+            },
+            beforeRemove(file, fileList) {
+                return this.$confirm(`确定移除 ${ file.name }？`);
+            },
+            saveImgUrl(response, file, fileList){
+                this.form.filePath=response.data.url
+                this.form.fileName=response.data.filename
+            },
+            //图片上传 end
+            downloadFile(name,path){
+                axios.get("/import/downloadFile",{
+                    params:{
+                        filePath:path,
+                        fileName:name
+                    },
+                    responseType:'blob'
+                }).then(res=>{
+                    var blob = new Blob([res.data])
+                    let fileName =  decodeURI(res.headers['content-disposition'].split("filename=")[1])
+                    var downloadElement = document.createElement('a');
+                    var href = window.URL.createObjectURL(blob); //创建下载的链接
+                    downloadElement.href = href;
+                    downloadElement.download = fileName; //下载后文件名
+                    document.body.appendChild(downloadElement);
+                    downloadElement.click(); //点击下载                　　
+                    document.body.removeChild(downloadElement); //下载完成移除元素　　
+                    window.URL.revokeObjectURL(href); //释放掉blob对象
+
+                })
+            }
+        },
+        created(){
+            this.initList();
+        }
+    })
+</script>

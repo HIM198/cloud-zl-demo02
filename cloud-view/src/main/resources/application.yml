@@ -1,0 +1,36 @@
+server:
+  port: 8082
+spring:
+  #数据库配置
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/teacherSys?useUnicode=true&characterEncoding=utf8
+    username: root
+    password: 78787899
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+applogs:
+  ignoring-urls: /;/sitemids;/sitemesh;/dashboard/data;/dashboard/datast;
+# 配置数据库日志
+logging:
+  level:
+    com.zl.mapper: debug  #打印哪个包下的日志信息.（dao）
+#jwt配置
+config:
+  jwt:
+    secret: abcdefg1234567
+    expire: 36000
+    header: Authorization
+application:
+  excel:
+    upload-dir: C:/excel
+aliyun:
+  oss:
+    file:
+      endpoint: http://oss-cn-hangzhou.aliyuncs.com
+      keyid: LTAI4GAyeRchMndzY1Nnq2uE
+      keysecret: BjJIF3Sfx5dgwgVcoclpEZssLm5vnz
+      bucketname: zx-pro
+      filehost: avatar

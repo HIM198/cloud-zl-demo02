@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="../../styles/css/element-ui.css">
+</head>
+<body>
+    <div id="app">
+        <el-upload
+                class="upload-demo"
+                action="/oss/file/upload"
+                :on-preview="handlePreview"
+                :on-remove="handleRemove"
+                :before-remove="beforeRemove"
+                multiple
+                :limit="1"
+                :on-exceed="handleExceed"
+                :on-success="saveImgUrl"
+                :file-list="fileList">
+            <el-button size="small" type="primary">点击上传</el-button>
+            <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+        </el-upload>
+
+        <el-divider></el-divider>
+    </div>
+</body>
+</html>
+<link rel="stylesheet" href="../../styles/css/font-awesome.min.css">
+<script src="../../styles/js/vue.js"></script>
+<script src="../../styles/js/element.js"></script>
+<script src="../../styles/js/axios.js"></script>
+<script src="../../styles/js/httpRequest.js"></script>
+<script>
+    new Vue({
+        el:"#app",
+        data:function (){
+            return{
+                fileList: [],
+                url:''
+            }
+        },
+        methods:{
+            //图片上传 start
+            handleRemove(file, fileList) {
+                this.url=''
+            },
+            handlePreview(file) {
+                console.log(123,file);
+            },
+            handleExceed(files, fileList) {
+                console.log(files)
+                console.log(fileList)
+                this.$message.warning(`当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
+            },
+            beforeRemove(file, fileList) {
+                return this.$confirm(`确定移除 ${ file.name }？`);
+            },
+            saveImgUrl(response, file, fileList){
+                this.url=response.message
+                console.log(this.url)
+            }
+            //图片上传 end
+
+
+        },
+        created(){
+
+        }
+    })
+</script>

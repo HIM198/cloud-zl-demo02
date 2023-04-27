@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="../../styles/css/element-ui.css">
+</head>
+<body>
+    <div id="app">
+        <el-descriptions title="日志详情" direction="vertical" :column="4" border>
+            <el-descriptions-item label="id">{{entity.id}}</el-descriptions-item>
+            <el-descriptions-item label="requestId">{{entity.requestId}}</el-descriptions-item>
+            <el-descriptions-item label="url">{{entity.url}}</el-descriptions-item>
+            <el-descriptions-item label="uri">{{entity.uri}}</el-descriptions-item>
+            <el-descriptions-item label="params">{{entity.params}}</el-descriptions-item>
+            <el-descriptions-item label="method">{{entity.method}}</el-descriptions-item>
+            <el-descriptions-item label="beanName">{{entity.beanName}}</el-descriptions-item>
+            <el-descriptions-item label="beanMethod">{{entity.beanMethod}}</el-descriptions-item>
+            <el-descriptions-item label="beginTime">{{entity.beginTime}}</el-descriptions-item>
+            <el-descriptions-item label="endTime">{{entity.endTime}}</el-descriptions-item>
+            <el-descriptions-item label="createDate">{{entity.createDate}}</el-descriptions-item>
+            <el-descriptions-item label="browserInfo">{{entity.browserInfo}}</el-descriptions-item>
+            <el-descriptions-item label="requestTime">{{entity.requestTime}}</el-descriptions-item>
+            <el-descriptions-item label="osInfo">{{entity.osInfo}}</el-descriptions-item>
+            <el-descriptions-item label="result">{{entity.result}}</el-descriptions-item>
+        </el-descriptions>
+
+
+        <div style="margin-left: 20px;margin-top: 20px">
+            <el-button type="primary" @click="goLogsList()">返回</el-button>
+        </div>
+    </div>
+</body>
+</html>
+<link rel="stylesheet" href="../../styles/css/font-awesome.min.css">
+<script src="../../styles/js/vue.js"></script>
+<script src="../../styles/js/element.js"></script>
+<script src="../../styles/js/axios.js"></script>
+<script src="../../styles/js/httpRequest.js"></script>
+<script>
+    new Vue({
+        el:"#app",
+        data:function (){
+            return{
+                id:location.href.split("?id=")[1],
+                entity:{}
+            }
+        },
+        methods:{
+            initList(){
+               axiosGetRequest(`/s-log-operatorall/findById/${this.id}`).then(res=>{
+                   this.entity=res;
+               })
+            },
+            goLogsList(){
+                location.href='/html/sys/logs-list.html'
+            }
+        },
+        created(){
+            this.initList();
+        }
+    })
+</script>

@@ -1,0 +1,211 @@
+.selector {
+	border-top: 0px solid #DDD;
+	margin-bottom: 10px;
+}
+
+.selector .sl-list {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.selector .sl-list li {
+	list-style: none;
+	float: left;
+	margin: 10px 10px 0px 10px;
+}
+
+.selector .sl-list li a {
+	float: left;
+	white-space: nowrap;
+	color: #005AA0;
+	text-decoration: none;
+	line-height: 26px;
+	font: 12px/150% Arial, Verdana, "宋体";
+}
+.selector .sl-list li a label {
+	cursor: pointer;
+}
+
+.selector .sl-list .firstLi {
+	list-style: none;
+	height: 18px;
+	margin: 10px 0;
+}
+
+.selector .selector-body {
+	background: #FFF;
+}
+
+.selector .sl-wrap {
+	display: block;
+	position: relative;
+	_zoom: 1;
+	line-height: 36px;
+	border-bottom: 1px solid #DDD;
+}
+
+.selector .sl-key1 {
+	float: left;
+	width: 150px;
+	margin-top: 1px;
+	padding-left: 10px;
+}
+
+.selector .sl-value1 {
+	margin-left: 160px;
+	padding-right: 70px;
+	padding-left: 10px;
+	overflow: hidden;
+	zoom: 1;
+}
+
+.selector .sl-key {
+	float: left;
+	width: 120px;
+	margin-top: 1px;
+	padding-left: 10px;
+}
+
+.selector .sl-value {
+	min-height:40px;
+	margin-left: 120px;
+	padding-right: 70px;
+	padding-left: 10px;
+	overflow: hidden;
+	zoom: 1;
+}
+
+.selector .sl-ext {
+	position: absolute;
+	top: 6px;
+	right: 10px;
+	width: 40px;
+	height: auto;
+	line-height: 22px;
+	overflow: hidden;
+	zoom: 1;
+}
+
+.selector .sl-input {
+	border: 0px solid #CCC;
+	padding-left: 10px;
+	width: 100%;
+}
+
+.selector .s-more {
+	text-align: center;
+	position: relative;
+	top: -1px;
+	border-top: 1px solid #ddd;
+	-webkit-transition: border-color .15s ease-in-out;
+	-moz-transition: border-color .15s ease-in-out;
+	transition: border-color .15s ease-in-out;
+}
+
+.selector .s-more .sm-wrap {
+	position: relative;
+	display: inline-block;
+	margin-top: -1px;
+	height: 28px;
+	line-height: 28px;
+	padding: 0 40px 0 20px;
+	border-width: 1px;
+	border-style: solid;
+	border-color: #FFF #DDD #DDD #DDD;
+	background: #fff;
+	cursor: pointer;
+	color: #333;
+	-webkit-transition: border-color .15s ease-in-out;
+	-moz-transition: border-color .15s ease-in-out;
+	transition: border-color .15s ease-in-out;
+}
+
+.selector .s-more .sm-wrap i {
+	position: absolute;
+	right: 16px;
+	top: 4px;
+	display: inline-block;
+	width: 20px;
+	height: 20px;
+	background: url(../images/search.ele.png) no-repeat 4px 7px;
+}
+
+.selector .s-more .sm-wrap.opened i {
+	background-position: 4px -27px;
+}
+
+.selector .s-more:hover {
+	border-color: #e4393c;
+}
+
+.selector .s-more:hover .sm-wrap {
+	color: #e4393c;
+	border-color: #FFf #e4393c #e4393c #e4393c;
+}
+
+.selector .s-more:hover .sm-wrap i {
+	background-position: 4px -10px;
+}
+
+.selector .s-more:hover .sm-wrap.opened i {
+	background-position: 4px -44px;
+}
+
+.selector .selector-list {
+	background: #FFF;
+}
+
+.selector .selector-list .sl-list li {
+	float: left;
+	margin: 7px;
+}
+
+.selector .selector-list .ss-item {
+	position: relative;
+	display: inline-block;
+	height: 23px;
+	line-height: 22px;
+	border: 1px solid #ddd;
+	font-size: 12px;
+	vertical-align: top;
+	margin: 0 5px 0px 0;
+	padding: 0 26px 0 4px;
+	cursor: pointer;
+}
+
+.selector .selector-list .ss-item b {
+	font-weight: normal;
+}
+
+.selector .selector-list .ss-item em {
+	font-style: normal;
+	color: #e4393c;
+}
+
+.selector .selector-list i {
+	display: block;
+	position: absolute;
+	width: 25px;
+	height: 22px;
+	right: 0;
+	top: 0;
+	background: url(../images/search.ele.png) no-repeat 7px -140px;
+}
+
+.selector .selector-list .ss-item:hover {
+	border-color: #e4393c;
+	text-decoration: none;
+}
+
+.selector .selector-list .ss-item:hover i {
+	background-color: #e4393c;
+	background-position: 7px -158px;
+}
+
+.selector .selector-list {
+		background: #FFF;
+}
+.col-lg-12{
+		background:#ECF0F5;
+}

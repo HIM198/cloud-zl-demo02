@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="../../styles/css/element-ui.css">
+</head>
+<body>
+    <div id="app">
+        <el-form style="margin-left: 20px;margin-top: 20px" :inline="true" :model="search" class="demo-form-inline">
+            <el-form-item label="订单状态">
+                <el-input v-model="search.valueOne" placeholder="请输入订单状态"></el-input>
+            </el-form-item>
+            <el-form-item>
+                <el-button type="primary" @click="initList()"> <i class="fa fa-search"></i> 查询</el-button>
+            </el-form-item>
+            <el-form-item>
+                <el-button type="primary" @click="clearSearch()"> <i class="el-icon-refresh-left"></i> 重置</el-button>
+            </el-form-item>
+            <el-button type="success"  @click="oppenAddDialog()"> <i class="el-icon-plus"></i> 新增</el-button>
+        </el-form>
+
+        <el-dialog  title="新增订单" :visible.sync="dialogFormVisibleAdd">
+            <el-form :model="form" :rules="rules" ref="ruleForm" >
+                <el-form-item v-if="this.flag===true" label="下单用户" :label-width="formLabelWidth" prop="uid">
+                    <el-select v-model="form.uid"  placeholder="请选择下单用户">
+                        <el-option v-for="v in userList" :label="v.name" :value="v.id"></el-option>
+                    </el-select>
+                </el-form-item>
+
+                <el-form-item v-if="this.flag===true" label="选择方案" :label-width="formLabelWidth" prop="pid">
+                    <el-select v-model="form.pid"  placeholder="请选择方案">
+                        <el-option v-for="v in programmeList" :label="v.name" :value="v.id"></el-option>
+                    </el-select>
+                </el-form-item>
+
+                <el-form-item label="状态" :label-width="formLabelWidth" prop="status">
+                    <el-select v-model="form.status"  placeholder="请选择状态">
+                        <el-option label="商家已接单" value="商家已接单"></el-option>
+                        <el-option label="订单延期" value="订单延期"></el-option>
+                        <el-option label="订单已完成" value="订单已完成"></el-option>
+                    </el-select>
+                </el-form-item>
+
+                <el-form-item label="改装进度" :label-width="formLabelWidth" prop="schedule">
+                    <el-select v-model="form.schedule"  placeholder="请选择改装进度">
+                        <el-option label="前期策划中" value="前期策划中"></el-option>
+                        <el-option label="材料准备中" value="材料准备中"></el-option>
+                        <el-option label="机车改装中" value="机车改装中"></el-option>
+                        <el-option label="机车改装完成" value="机车改装完成"></el-option>
+                    </el-select>
+                </el-form-item>
+
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="dialogFormVisibleAdd = false">取 消</el-button>
+                <el-button type="primary" @click="saveOrderBtn('ruleForm')">确 定</el-button>
+            </div>
+        </el-dialog>
+
+        <el-table
+                :data="tableData"
+                border>
+            <el-table-column
+                    prop="date"
+                    label="序号">
+                <template slot-scope="scope">
+                    {{scope.$index+1}}
+                </template>
+            </el-table-column>
+            <el-table-column
+                    prop="uid"
+                    label="客户编号">
+            </el-table-column>
+            <el-table-column
+                    label="下单账号">
+                <template slot-scope="scope">
+                    {{scope.row.user.name}}
+                </template>
+            </el-table-column>
+            <el-table-column
+                    prop="sumMoney"
+                    label="总金额">
+            </el-table-column>
+            <el-table-column
+                    prop="status"
+                    label="状态">
+            </el-table-column>
+            <el-table-column
+                    prop="schedule"
+                    label="改装进度">
+            </el-table-column>
+            <el-table-column
+                    prop="createTime"
+                    label="创建时间">
+            </el-table-column>
+            <el-table-column
+                    prop="updateTime"
+                    label="修改时间">
+            </el-table-column>
+            <el-table-column
+                    fixed="right"
+                    label="操作"
+                    width="220">
+                <template slot-scope="scope">
+                    <el-button
+                            size="mini"
+                            type="warning"
+                            @click="details(scope.row)">详情</el-button>
+                    <el-button
+                            size="mini"
+                            @click="handleEdit(scope.row.id)">编辑</el-button>
+                    <el-button
+                            size="mini"
+                            type="danger"
+                            @click="handleOrderDelete(scope.row.id)">删除</el-button>
+                </template>
+            </el-table-column>
+        </el-table>
+
+        <el-pagination
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+                :current-page="search.pageNumber"
+                :page-sizes="[5,10]"
+                :page-size="search.pageCount"
+                layout="total, sizes, prev, pager, next, jumper"
+                :total="total">
+        </el-pagination>
+
+        <el-dialog title="订单详情" :visible.sync="dialogTableVisible">
+            <el-descriptions title="订单信息">
+                <el-descriptions-item label="客户编号">{{detailsOrder.uid}}</el-descriptions-item>
+                <el-descriptions-item label="下单账号">{{detailsOrder.user.name}}</el-descriptions-item>
+                <el-descriptions-item label="总金额">{{detailsOrder.sumMoney}}</el-descriptions-item>
+                <el-descriptions-item label="状态">{{detailsOrder.status}}</el-descriptions-item>
+                <el-descriptions-item label="改装进度">{{detailsOrder.schedule}}</el-descriptions-item>
+                <el-descriptions-item label="创建时间">{{detailsOrder.createTime}}</el-descriptions-item>
+                <el-descriptions-item label="修改时间">{{detailsOrder.updateTime}}</el-descriptions-item>
+            </el-descriptions>
+            <el-table :data="orderItemList">
+                <el-table-column property="oid" label="订单编号" width="150"></el-table-column>
+                <el-table-column property="price" label="单价" width="200"></el-table-column>
+                <el-table-column property="count" label="数量"></el-table-column>
+                <el-table-column  label="方案名称">
+                    <template slot-scope="scope">
+                        <span v-if="scope.row.pid!=='用户定制改装'">{{scope.row.programme.name}}</span>
+                        <span v-if="scope.row.pid==='用户定制改装'">{{scope.row.pid}}</span>
+                    </template>
+                </el-table-column>
+            </el-table>
+
+            <br>
+            <br>
+            <el-form :model="form" :rules="rules" ref="ruleForm">
+                <el-form-item label="评价内容"  prop="content">
+                    <el-input v-model="form.content"></el-input>
+                </el-form-item>
+            </el-form>
+            <div>
+                <div v-for="c in commentItemList">
+                    <span>评论用户：{{c.name}}</span>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <span>{{c.content}}</span>
+                    <span style="display: inline-block;float: right">{{c.createTime}}</span>
+                    <br>
+                    <span>
+                        <a @click="replyComment('ruleForm',c.id)"><font color="blue">回复</font></a>
+                        <a v-if="c.loginUser===c.name"  @click="handleDelete(c.id)"><font color="red">删除</font></a>
+                    </span>
+                    <hr>
+                    <div v-for="c1 in c.children" style="margin-left: 20px">
+                        <span>回复评论用户：{{c1.name}}</span>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <span>{{c1.content}}</span>
+                        <span style="display: inline-block;float: right">{{c1.createTime}}</span>
+                        <br>
+                        <span>
+                        <a v-if="c1.loginUser===c1.name"  @click="handleDelete(c1.id)"><font color="red">删除</font></a>
+                    </span>
+                        <hr>
+                    </div>
+                </div>
+            </div>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="dialogTableVisible = false">取 消</el-button>
+                <el-button type="primary" @click="saveBtn('ruleForm')">确 定</el-button>
+            </div>
+        </el-dialog>
+    </div>
+</body>
+</html>
+<link rel="stylesheet" href="../../styles/css/font-awesome.min.css">
+<script src="../../styles/js/vue.js"></script>
+<script src="../../styles/js/element.js"></script>
+<script src="../../styles/js/axios.js"></script>
+<script src="../../styles/js/httpRequest.js"></script>
+<script>
+    new Vue({
+        el:"#app",
+        data:function (){
+            return{
+                form:{},
+                tableData:[],
+                search:{
+                    pageNumber:1,
+                    pageCount:5
+                },
+                total:0,
+                dialogFormVisible:false,
+                dialogFormVisibleAdd:false,
+                dialogTableVisible:false,
+                formLabelWidth:'120px',
+                multipleSelection: [],
+                roleList: [],
+                tableDataPro:[],
+                ruleForm: {},
+                rules: {
+                    content: [
+                        { required: true, message: '请输入评论内容', trigger: 'blur' },
+                    ]
+                },
+                flag:true,
+                userList:[],
+                programmeList:[],
+                detailsOrder:{
+                    user:{}
+                },
+                orderItemList:[],
+                commentItemList:[],
+                loginUser:''
+            }
+        },
+        methods:{
+            //列表查询
+            initList(){
+                axiosPostRequest("/order/findPage",this.search).then(res=>{
+                    this.tableData=res.records
+                    this.total=res.total
+                })
+
+                axiosGetRequest("/user/findAll",this.search).then(res=>{
+                   this.userList=res;
+                })
+
+                axiosGetRequest("/programme/all",this.search).then(res=>{
+                    this.programmeList=res;
+                })
+            },
+            handleSizeChange(val) {
+                this.search.pageCount=val;
+                this.initList();
+            },
+            handleCurrentChange(val) {
+                this.search.pageNumber=val;
+                this.initList();
+            },
+            //编辑
+            handleEdit(id){
+                this.flag=false;
+                this.dialogFormVisibleAdd=true;
+                axiosGetRequest(`/order/findById/${id}`).then(res=>{
+                    this.form=res;
+                })
+            },
+            //删除
+            handleDelete(id){
+                this.$confirm('此操作将永久删除该评论, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                   axiosGetRequest(`/comment/deleteById/${id}`).then(res=>{
+                       if (res.code===20000){
+                           this.$message.success(res.message)
+                           this.initComment(this.detailsOrder.id)
+                       }else {
+                           this.$message.error(res.message)
+                       }
+                   })
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
+            },
+            //删除
+            handleOrderDelete(id){
+                this.$confirm('此操作将永久删除该订单, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    axiosGetRequest(`/order/deleteById/${id}`).then(res=>{
+                        if (res.code===20000){
+                            this.$message.success(res.message)
+                            this.initList();
+                        }else {
+                            this.$message.error(res.message)
+                        }
+                    })
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
+            },
+            //跳转到添加页
+            oppenAddDialog(){
+                this.flag=true;
+                this.form={};
+                this.dialogFormVisibleAdd=true;
+            },
+            //新增或修改
+            saveOrderBtn(formName){
+                this.$refs[formName].validate((valid) => {
+                    if (valid) {
+                        axiosPostRequest("/order/save",this.form).then(res=>{
+                            this.dialogFormVisibleAdd=false;
+                            if (res.code===20000){
+                                this.$message.success(res.message)
+                                this.initList();
+                            }else {
+                                this.$message.error(res.message)
+                            }
+                        })
+                    }
+                });
+            },
+            //新增或修改
+            saveBtn(formName){
+                this.$refs[formName].validate((valid) => {
+                    if (valid) {
+                        this.form.oid=this.detailsOrder.id;
+                        this.form.cid=0
+                        if (this.orderItemList[0].pid==='用户定制改装'){
+                        }else {
+                            this.form.pid=this.orderItemList[0].pid
+                        }
+                        axiosPostRequest("/comment/saveComment",this.form).then(res=>{
+                            this.dialogFormVisibleAdd=false;
+                            if (res.code===20000){
+                                this.$message.success(res.message)
+                                this.initComment(this.detailsOrder.id);
+                            }else {
+                                this.$message.error(res.message)
+                            }
+                        })
+                    }
+                });
+            },
+            replyComment(formName,id){
+                this.$refs[formName].validate((valid) => {
+                    if (valid) {
+                        this.form.oid=this.detailsOrder.id;
+                        this.form.cid=id
+                        if (this.orderItemList[0].pid==='用户定制改装'){
+                        }else {
+                            this.form.pid=this.orderItemList[0].pid
+                        }
+                        axiosPostRequest("/comment/saveComment",this.form).then(res=>{
+                            this.dialogFormVisibleAdd=false;
+                            if (res.code===20000){
+                                this.$message.success(res.message)
+                                this.initComment(this.detailsOrder.id);
+                            }else {
+                                this.$message.error(res.message)
+                            }
+                        })
+                    }
+                });
+            },
+            handleSelectionChange(val) {
+                this.multipleSelection = val;
+            },
+            //重置查询框
+            clearSearch(){
+                this.search={
+                    pageNumber:1,
+                    pageCount:5
+                }
+                this.initList();
+            },
+            details(row){
+                this.detailsOrder=row
+                this.dialogTableVisible=true;
+
+                axiosGetRequest(`/order-item/findByOid/${row.id}`).then(res=>{
+                    this.orderItemList=res
+                })
+                this.initComment(row.id)
+            },
+            initComment(id){
+                axiosGetRequest(`/comment/findByOid/${id}`).then(res=>{
+                    this.commentItemList=res
+                })
+            },
+        },
+        created(){
+            this.initList();
+        }
+    })
+</script>

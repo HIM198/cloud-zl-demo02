@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="../../styles/css/element-ui.css">
+</head>
+<body>
+    <div id="app">
+        <el-form style="margin-left: 20px;margin-top: 20px" :inline="true" :model="search" class="demo-form-inline">
+            <el-form-item label="科目">
+                <el-input v-model="search.valueOne" placeholder="请输入科目名称"></el-input>
+            </el-form-item>
+            <el-form-item>
+                <el-button type="primary" @click="initList()"> <i class="fa fa-search"></i> 查询</el-button>
+            </el-form-item>
+            <el-form-item>
+                <el-button type="primary" @click="clearSearch()"> <i class="el-icon-refresh-left"></i> 重置</el-button>
+            </el-form-item>
+        </el-form>
+
+        <el-dialog  title="录入成绩" :visible.sync="dialogFormVisibleAdd">
+            <el-form :model="form" :rules="rules" ref="ruleForm" >
+                <el-form-item label="学生" :label-width="formLabelWidth" prop="sid">
+                    <el-select v-model="form.sid"  placeholder="请选择学生">
+                        <el-option v-for="s in studentList" :label="s.name" :value="s.id"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item  label="科目" :label-width="formLabelWidth"  prop="course">
+                    <el-input v-model="form.course" autocomplete="off"></el-input>
+                </el-form-item>
+                <el-form-item  label="平时成绩" :label-width="formLabelWidth"  prop="pingshiScore">
+                    <el-input-number @change="calculation()" v-model="form.pingshiScore" autocomplete="off"></el-input-number>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;平时成绩占比(%)&nbsp;&nbsp;<el-input-number max="99" @change="calculation()" v-model="form.pingshizhanbi" autocomplete="off" ></el-input-number>
+                </el-form-item>
+                <el-form-item  label="阶段考核成绩" :label-width="formLabelWidth"  prop="jieduanScore1">
+                    <el-input-number @change="calculation()"   v-model="form.jieduanScore1" autocomplete="off"></el-input-number>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;阶段考核成绩占比(%)&nbsp;&nbsp;<el-input-number max="99" @change="calculation()" v-model="form.jieduanzhanbi1" autocomplete="off"></el-input-number>
+                </el-form-item>
+                <el-form-item  label="阶段考核成绩" :label-width="formLabelWidth"  prop="jieduanScore2">
+                    <el-input-number @change="calculation()"  v-model="form.jieduanScore2" autocomplete="off"></el-input-number>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;阶段考核成绩占比(%)&nbsp;&nbsp;<el-input-number max="99" @change="calculation()" v-model="form.jieduanzhanbi2" autocomplete="off"></el-input-number>
+                </el-form-item>
+                <el-form-item  label="期末考核成绩" :label-width="formLabelWidth"  prop="qimoScore">
+                    <el-input-number @change="calculation()"  v-model="form.qimoScore" autocomplete="off"></el-input-number>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;期末考核成绩占比(%)&nbsp;&nbsp;<el-input-number max="99" @change="calculation()" v-model="form.qimozhanbi" autocomplete="off"></el-input-number>
+                </el-form-item>
+                <el-form-item  label="总成绩" :label-width="formLabelWidth"  prop="zongpingScore">
+                    <el-input  disabled v-model="form.zongpingScore"  autocomplete="off"></el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="dialogFormVisibleAdd = false">取 消</el-button>
+                <el-button type="primary" @click="saveBtn('ruleForm')">确 定</el-button>
+            </div>
+        </el-dialog>
+
+        <el-table
+                :data="tableData"
+                border>
+            <el-table-column
+                    prop="date"
+                    label="序号">
+                <template slot-scope="scope">
+                    {{scope.$index+1}}
+                </template>
+            </el-table-column>
+            <el-table-column
+                    label="学生名称">
+                <template slot-scope="scope">
+                    {{scope.row.sname}}
+                </template>
+            </el-table-column>
+            <el-table-column
+                    label="教师名称">
+                <template slot-scope="scope">
+                    {{scope.row.tname}}
+                </template>
+            </el-table-column>
+            <el-table-column
+                    prop="course"
+                    label="科目">
+            </el-table-column>
+            <el-table-column
+                    prop="pingshiScore"
+                    label="平时成绩">
+            </el-table-column>
+            <el-table-column
+                    prop="jieduanScore1"
+                    label="阶段成绩">
+            </el-table-column>
+            <el-table-column
+                    prop="jieduanScore2"
+                    label="阶段成绩">
+            </el-table-column>
+            <el-table-column
+                    prop="zongpingScore"
+                    label="总成绩">
+            </el-table-column>
+            <el-table-column
+                    prop="createTime"
+                    label="创建时间">
+            </el-table-column>
+            <el-table-column
+                    prop="updateTime"
+                    label="修改时间">
+            </el-table-column>
+            <el-table-column
+                    fixed="right"
+                    width="160"
+                    label="操作">
+                <template slot-scope="scope">
+                    <el-button
+                            size="mini"
+                            @click="handleEdit(scope.row.id)">编辑</el-button>
+                    <el-button
+                            size="mini"
+                            type="danger"
+                            @click="handleDelete(scope.row.id)">删除</el-button>
+                </template>
+            </el-table-column>
+        </el-table>
+
+        <el-pagination
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+                :current-page="search.pageNumber"
+                :page-sizes="[5,10]"
+                :page-size="search.pageCount"
+                layout="total, sizes, prev, pager, next, jumper"
+                :total="total">
+        </el-pagination>
+    </div>
+</body>
+</html>
+<link rel="stylesheet" href="../../styles/css/font-awesome.min.css">
+<script src="../../styles/js/vue.js"></script>
+<script src="../../styles/js/element.js"></script>
+<script src="../../styles/js/axios.js"></script>
+<script src="../../styles/js/httpRequest.js"></script>
+<script>
+    new Vue({
+        el:"#app",
+        data:function (){
+            return{
+                rules: {
+                    sid: [
+                        { required: true, message: '请输入选择学生', trigger: 'blur' },
+                    ],
+                    course: [
+                        { required: true, message: '请输入输入科目', trigger: 'blur' },
+                    ],
+                    type: [
+                        { required: true, message: '请输入选择类型', trigger: 'blur' },
+                    ],
+                    pingshiScore: [
+                        { required: true, message: '请输入平时成绩', trigger: 'blur' },
+                    ],
+                    jieduanScore1: [
+                        { required: true, message: '请输入阶段考核成绩', trigger: 'blur' },
+                    ],
+                    jieduanScore2: [
+                        { required: true, message: '请输入阶段考核成绩', trigger: 'blur' },
+                    ],
+                    qimoScore: [
+                        { required: true, message: '请输入期末考核成绩', trigger: 'blur' },
+                    ]
+                },
+                form:{
+                    pingshizhanbi:25,
+                    jieduanzhanbi1:25,
+                    jieduanzhanbi2:25,
+                    qimozhanbi:25,
+                },
+                tableData:[],
+                search:{
+                    pageNumber:1,
+                    pageCount:5
+                },
+                total:0,
+                dialogFormVisible:false,
+                dialogFormVisibleAdd:false,
+                formLabelWidth:'120px',
+                multipleSelection: [],
+                roleList: [],
+                tableDataPro:[],
+                ruleForm: {},
+                flag:true,
+                studentList:[],
+                classList:[],
+            }
+        },
+        methods:{
+            //列表查询
+            initList(){
+                axiosPostRequest("/score/findPageByStu",this.search).then(res=>{
+                    this.tableData=res.records
+                    this.total=res.total
+                })
+            },
+            handleSizeChange(val) {
+                this.search.pageCount=val;
+                this.initList();
+            },
+            handleCurrentChange(val) {
+                this.search.pageNumber=val;
+                this.initList();
+            },
+            //编辑
+            handleEdit(id){
+                this.flag=false;
+                this.dialogFormVisibleAdd=true;
+                axiosGetRequest(`/score/findById/${id}`).then(res=>{
+                    this.form=res;
+                    this.form.pingshizhanbi=25
+                    this.form.jieduanzhanbi1=25
+                    this.form.jieduanzhanbi2=25
+                    this.form.qimozhanbi=25
+                })
+            },
+            //删除
+            handleDelete(id){
+                this.$confirm('此操作将永久删除该学生分数, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                   axiosGetRequest(`/score/deleteById/${id}`).then(res=>{
+                       if (res.code===20000){
+                           this.$message.success(res.message)
+                           this.initList();
+                       }else {
+                           this.$message.error(res.message)
+                       }
+                   })
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
+            },
+            //跳转到添加页
+            oppenAddDialog(){
+                this.flag=true;
+                this.form={
+                    pingshizhanbi:25,
+                    jieduanzhanbi1:25,
+                    jieduanzhanbi2:25,
+                    qimozhanbi:25,
+                    pingshiScore:0,
+                    jieduanScore1:0,
+                    jieduanScore2:0,
+                    qimoScore:0,
+                };
+                this.dialogFormVisibleAdd=true;
+            },
+            //新增或修改
+            saveBtn(formName){
+                this.$refs[formName].validate((valid) => {
+                    if (valid) {
+                       if (this.flag){
+                           axiosPostRequest("/score/save",this.form).then(res=>{
+                               this.dialogFormVisibleAdd=false;
+                               if (res.code===20000){
+                                   this.$message.success(res.message)
+                                   this.initList();
+                               }else {
+                                   this.$message.error(res.message)
+                               }
+                           })
+                       }else {
+                           axiosPostRequest("/score/update",this.form).then(res=>{
+                               this.dialogFormVisibleAdd=false;
+                               if (res.code===20000){
+                                   this.$message.success(res.message)
+                                   this.initList();
+                               }else {
+                                   this.$message.error(res.message)
+                               }
+                           })
+                       }
+                    } else {
+                        return false;
+                    }
+                });
+            },
+            calculation(){
+                console.log(this.form.pingshiScore*('0.'+this.form.pingshizhanbi))
+                console.log('0.'+this.form.pingshizhanbi)
+                console.log(this.form.pingshizhanbi)
+                let sum=this.form.pingshiScore*('0.'+this.form.pingshizhanbi)
+                    +this.form.jieduanScore1*('0.'+this.form.jieduanzhanbi1)
+                    +this.form.jieduanScore2*('0.'+this.form.jieduanzhanbi2)
+                    +this.form.qimoScore*('0.'+this.form.qimozhanbi)
+                ;
+                this.form.zongpingScore=sum;
+            },
+            handleSelectionChange(val) {
+                this.multipleSelection = val;
+            },
+            //重置查询框
+            clearSearch(){
+                this.search={
+                    pageNumber:1,
+                    pageCount:5
+                }
+                this.initList();
+            }
+        },
+        created(){
+            this.initList();
+        }
+    })
+</script>

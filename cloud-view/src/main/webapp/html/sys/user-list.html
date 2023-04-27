@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="../../styles/css/element-ui.css">
+</head>
+<body>
+    <div id="app">
+        <el-form style="margin-left: 20px;margin-top: 20px" :inline="true" :model="search" class="demo-form-inline">
+            <el-form-item label="账号">
+                <el-input v-model="search.valueOne" placeholder="请输入账号"></el-input>
+            </el-form-item>
+            <el-form-item>
+                <el-button type="primary" @click="initUserList()"> <i class="fa fa-search"></i> 查询</el-button>
+            </el-form-item>
+            <el-form-item>
+                <el-button type="primary" @click="clearSearch()"> <i class="el-icon-refresh-left"></i> 重置</el-button>
+            </el-form-item>
+            <el-button type="success"  @click="oppenAddDialog()"> <i class="el-icon-plus"></i> 新增</el-button>
+        </el-form>
+
+        <el-dialog  title="新增用户" :visible.sync="dialogFormVisibleAdd">
+            <el-form :model="form" :rules="rules" ref="ruleForm" >
+                <el-form-item  v-if="this.flag===true" label="用户名" :label-width="formLabelWidth"  prop="name">
+                    <el-input   v-model="form.name" autocomplete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="密码" :label-width="formLabelWidth"  prop="password">
+                    <el-input type="password" v-model="form.password" autocomplete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="确认密码" :label-width="formLabelWidth"  prop="password">
+                    <el-input type="password" v-model="form.password1" autocomplete="off"></el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="dialogFormVisibleAdd = false">取 消</el-button>
+                <el-button type="primary" @click="saveUserBtn('ruleForm')">确 定</el-button>
+            </div>
+        </el-dialog>
+
+
+        <el-dialog  title="分配权限" :visible.sync="dialogFormVisible">
+            <el-table
+                    ref="multipleTable"
+                    :data="roleList"
+                    :row-key="id"
+                    tooltip-effect="dark"
+                    style="width: 100%"
+                    :reserve-selection="true"
+                    @selection-change="handleSelectionChange">
+                <el-table-column
+                        type="selection"
+                        width="55">
+                </el-table-column>
+                <el-table-column
+                        prop="name"
+                        label="角色"
+                        show-overflow-tooltip>
+                </el-table-column>
+            </el-table>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="dialogFormVisible = false">取 消</el-button>
+                <el-button type="primary" @click="savePer()">确 定</el-button>
+            </div>
+        </el-dialog>
+
+        <el-table
+                :data="tableData"
+                border>
+            <el-table-column
+                    fixed
+                    prop="date"
+                    label="序号"
+                    width="50">
+                <template slot-scope="scope">
+                    {{scope.$index+1}}
+                </template>
+            </el-table-column>
+            <el-table-column
+                    fixed
+                    prop="name"
+                    label="账号"
+                    width="150">
+            </el-table-column>
+            <el-table-column
+                    label="状态">
+                <template slot-scope="scope">
+                    <el-tag  v-if="scope.row.status==='ACTIVE'" type="success">启用</el-tag>
+                    <el-tag  v-if="scope.row.status!=='ACTIVE'" type="danger">禁用</el-tag>
+                </template>
+            </el-table-column>
+            <el-table-column
+                    label="分配权限">
+                <template slot-scope="scope">
+                    <font size="4" color="#00c0ef">
+                        <i class="el-icon-s-check" @click="assignPer(scope.row.id)"></i>
+                    </font>
+                </template>
+            </el-table-column>
+            <el-table-column
+                    prop="createTime"
+                    label="创建时间">
+            </el-table-column>
+            <el-table-column
+                    prop="updateTime"
+                    label="更新时间">
+            </el-table-column>
+            <el-table-column
+                    fixed="right"
+                    label="操作"
+                    width="150">
+                <template slot-scope="scope">
+                    <el-button
+                            size="mini"
+                            @click="handleEdit(scope.row.id)">编辑</el-button>
+                    <el-button
+                            size="mini"
+                            type="danger"
+                            @click="handleDelete(scope.row.id)">删除</el-button>
+                </template>
+            </el-table-column>
+        </el-table>
+
+        <el-pagination
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+                :current-page="search.pageNumber"
+                :page-sizes="[5,10]"
+                :page-size="search.pageCount"
+                layout="total, sizes, prev, pager, next, jumper"
+                :total="total">
+        </el-pagination>
+    </div>
+</body>
+</html>
+<link rel="stylesheet" href="../../styles/css/font-awesome.min.css">
+<script src="../../styles/js/vue.js"></script>
+<script src="../../styles/js/element.js"></script>
+<script src="../../styles/js/axios.js"></script>
+<script src="../../styles/js/httpRequest.js"></script>
+<script>
+    new Vue({
+        el:"#app",
+        data:function (){
+            return{
+                form:{},
+                tableData:[],
+                search:{
+                    pageNumber:1,
+                    pageCount:5
+                },
+                total:0,
+                dialogFormVisible:false,
+                dialogFormVisibleAdd:false,
+                formLabelWidth:'120px',
+                //记录当前分配权限用户的id
+                uid:0,
+                multipleSelection: [],
+                roleList: [],
+                tableDataPro:[],
+                ruleForm: {
+                    name: '',
+                    password: '',
+                },
+                rules: {
+                    name: [
+                        { required: true, message: '请输入用户名', trigger: 'blur' },
+                    ],
+                    password: [
+                        { required: true, message: '请输入密码', trigger: 'blur' },
+                    ],
+                },
+                flag:true
+            }
+        },
+        methods:{
+            //用户列表查询
+            initUserList(){
+                axiosPostRequest("/user/findPage",this.search).then(res=>{
+                    this.tableData=res.records
+                    this.total=res.total
+                })
+
+                axiosGetRequest("/role/findAll").then(res=>{
+                    this.roleList=res
+                })
+
+
+            },
+            handleSizeChange(val) {
+                this.search.pageCount=val;
+                this.initUserList();
+            },
+            handleCurrentChange(val) {
+                this.search.pageNumber=val;
+                this.initUserList();
+            },
+            //编辑
+            handleEdit(id){
+                this.flag=false;
+                this.dialogFormVisibleAdd=true;
+                axiosGetRequest(`/user/findById/${id}`).then(res=>{
+                    this.form=res;
+                    this.form.password=''
+                })
+            },
+            //删除
+            handleDelete(id){
+                this.$confirm('此操作将永久删除该用户, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                   axiosGetRequest(`/user/deleteById/${id}`).then(res=>{
+                       if (res.code===20000){
+                           this.$message.success(res.message)
+                           this.initUserList();
+                       }else {
+                           this.$message.error(res.message)
+                       }
+                   })
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
+            },
+            //分配角色
+            assignPer(id){
+                //清空回显id
+                this.tableDataPro=[]
+                this.dialogFormVisible=true;
+                this.uid=id;
+                axiosGetRequest(`/user-role/findUserRole/${id}`).then(res=>{
+                    this.tableDataPro.push({id:res.roleId})
+
+                    // row:当前页面table表格数据，tableDataPro:需要回显页面的table表格数据 id:回显条件
+                    this.$nextTick(() => {
+                        if (this.$refs.multipleTable) {
+                            this.$refs.multipleTable.clearSelection();
+                        }
+                        this.roleList.forEach(row => {
+                            for (let j in this.tableDataPro) {
+                                if (row.id == this.tableDataPro[j].id) {
+                                    this.$refs.multipleTable.toggleRowSelection(
+                                        row,
+                                        true
+                                    );
+                                }
+                            }
+                        })
+                    })
+
+                })
+            },
+            //保存角色
+            savePer(){
+                if (this.multipleSelection.length===0){
+                    this.$message.error('请选择角色!')
+                    return
+                }
+                if (this.multipleSelection.length>1){
+                    this.$message.error('只能分配一个角色!')
+                    return;
+                }
+                //保存用户角色
+                axiosGetRequest(`/user-role/assignUserRole/${this.uid}/${this.multipleSelection[0].id}`).then(res=>{
+                    if (res.code===20000){
+                        this.dialogFormVisible=false;
+                        this.$message.success(res.message)
+                        this.initUserList();
+                    }else {
+                        this.$message.error(res.message)
+                    }
+                })
+            },
+            //跳转到添加页
+            oppenAddDialog(){
+                this.flag=true;
+                this.form={};
+                this.dialogFormVisibleAdd=true;
+            },
+            //新增或修改用户
+            saveUserBtn(formName){
+                this.$refs[formName].validate((valid) => {
+                    if (valid) {
+                       if (this.flag){
+                           if (this.form.password===this.form.password1){
+                               axiosPostRequest("/user/saveUser",this.form).then(res=>{
+                                   this.dialogFormVisibleAdd=false;
+                                   if (res.code===20000){
+                                       this.$message.success(res.message)
+                                       this.initUserList();
+                                   }else {
+                                       this.$message.error(res.message)
+                                   }
+                               })
+                           }else {
+                               this.$message.error('密码不一致')
+                           }
+                       }else {
+                           if (this.form.password===this.form.password1){
+                               axiosPostRequest("/user/update",this.form).then(res=>{
+                                   this.dialogFormVisibleAdd=false;
+                                   if (res.code===20000){
+                                       this.$message.success(res.message)
+                                       this.initUserList();
+                                   }else {
+                                       this.$message.error(res.message)
+                                   }
+                               })
+                           }else {
+                               this.$message.error('密码不一致')
+                           }
+                       }
+                    } else {
+                        return false;
+                    }
+                });
+            },
+            handleSelectionChange(val) {
+                this.multipleSelection = val;
+            },
+            //重置查询框
+            clearSearch(){
+                this.search={
+                    pageNumber:1,
+                    pageCount:5
+                }
+                this.initUserList();
+            }
+        },
+        created(){
+            this.initUserList();
+        }
+    })
+</script>

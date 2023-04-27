@@ -1,0 +1,280 @@
+body {
+  /* font-family: 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif; */
+  /* font-family: 'open sans', 'Helvetica Neue', Helvetica, Arial, sans-serif; */
+  font-family: 'Arial','Microsoft YaHei','黑体','宋体',sans-serif;
+  background-color: #ecf0f5;
+}
+/* H1 - H6 font */
+h1,h2,h3,h4,h5,h6,.h1,.h2,.h3,.h4,.h5,.h6 {
+  font-family: 'Arial','Microsoft YaHei','黑体','宋体',sans-serif;
+  /* font-family: 'Source Sans Pro', sans-serif; */
+}
+.main-header .logo {
+  font-family: 'Arial','Microsoft YaHei','黑体','宋体',sans-serif;
+  /* font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; */
+}
+
+.content-header{
+	padding-top: 10px;
+}
+.content{
+	padding-top: 10px;
+}
+.content-header > .breadcrumb {
+	 top: 10px;
+}
+.notnull{color: #FF0000;}
+
+span.error, label.error, div.error{
+    color: #FF0000;
+}
+span.success {
+	color: #00A600;
+}
+span.warning {
+	color: #EA7500;
+}
+span.info {
+	color: #00c0ef;
+}
+
+.treeload {
+   height: 40px;background: url(loading-0.gif) no-repeat;
+}
+.treeload_error {
+    color: #FF0000;background-color: #c0c0c0;height: 30px;
+}
+.select2-selection--single{
+	padding-left: 0px;
+}
+
+table.dataTables thead tr th{
+	padding: 8px;
+}
+
+table.dataTables thead tr th.xh{
+	font-weight: bold; padding: 0px 8px 8px 8px;
+}
+
+table.dataTables thead tr th.select{
+	width: 30; padding: 0px 0px 8px 4px;
+}
+.form-control {
+	border-radius: 4px;
+	background-color: #fff;
+    border: 1px solid #aaa;
+}
+.select2{
+  min-width: 196px;
+}
+
+.form_view{
+}
+
+.form_view .form-group{
+	border-bottom:1px solid #c0c0c0;
+	padding: 3px 0px 10px 0px;
+	margin: 0px 0px 0px 0px;
+}
+
+.form_view .lable-text{
+	padding-top: 8px;
+}
+
+.control-value{
+	padding-top: 8px;
+}
+
+input.grw{
+	text-align: right;
+	padding-right: 3px;
+}
+input.qty{
+	text-align: right;
+	padding-right: 3px;
+}
+table.dataTable tbody tr.selected {
+  background-color: #B0BED9;
+}
+table.tbodyTextRigth td{
+	text-align: right;
+}
+table.theadTextCenter th{
+	text-align: center;
+}
+
+table.tscrollx{ white-space: nowrap; }
+table.tscrollx tr{ height: 40px;}
+
+
+.select2-container--default .select2-selection--single, .select2-selection .select2-selection--single{
+	padding:6px 6px 6px 0px;
+	height: 34px;
+}
+.select2-container--default .select2-selection--single .select2-selection__placeholder{
+	color: #555;
+	font-size: 14px;
+	font-family: 'Arial','Microsoft YaHei','黑体','宋体',sans-serif;
+}
+.select2-container--default .select2-selection--single .select2-selection__rendered{
+	color: #555;
+	padding-left: 10px;
+	font-size: 14px;
+}
+.select2-container--default .select2-selection--multiple .select2-selection__choice{
+	color: #000000;
+}
+
+/* .sidebar-mini.sidebar-collapse .sidebar-menu > li:hover > a > span:not(.pull-right),
+.sidebar-mini.sidebar-collapse .sidebar-menu > li:hover > .treeview-menu {
+    display: block !important;
+    position: absolute;
+    width: 225px;
+    left: 50px;
+}
+
+.sidebar-mini.sidebar-collapse .sidebar-menu > li:hover > a > .pull-right-container {
+    float: right;
+    width: auto!important;
+    left: 245px!important;
+    top: 10px!important;
+} */
+
+.textleft{
+	text-align: left;
+}
+.textright{
+	text-align: right;
+}
+.textcenter{
+	text-align: center;
+}
+.login-logo{
+	font-size: 30px;
+}
+.table-hover > tbody > tr:hover {
+	background-color: #CCCCCC;
+}
+.highlight{
+	background-color: #CCCCCC;
+}
+
+.selectForm_dt  .control-label{
+	text-align: right;
+	min-width: 90px;
+}
+.ztreeInput_terr{
+	 height:400px;overflow-y:auto;width:300px;display: none; position: absolute;z-index:100;background:#85DB47;
+}
+.ztreeInput_terr ul{
+	 margin-top: 0; background-color: #85DB47
+}
+.ztreeSelect_terr{
+	height:400px;overflow-y:auto;width:300px;display: none; position: absolute;z-index:100;margin-left:95px;background:#85DB47;
+}
+.ztreeSelect_terr ul{
+	 margin-top: 0; background-color: #85DB47
+}
+.ztreeInput_ou{
+	 height:400px;overflow-y:auto;width:300px;display: none; position: absolute;z-index:100;background:#85DB47;
+}
+.ztreeInput_ou ul{
+	 margin-top: 0; background-color: #85DB47
+}
+
+.ztreeInput_staff{
+	 height:600px;overflow-y:auto;width:400px;display: none; position: absolute;z-index:100;background:#85DB47;
+}
+.ztreeInput_staff ul{
+	 margin-top: 0; background-color: #85DB47
+}
+
+.main-footer{
+	font-size: 12px;line-height:1;
+}
+.box{
+	margin-bottom: 0px;
+}
+
+.DTFC_RightBodyLiner {
+	overflow-y: hidden;
+	overflow: hidden;
+	right: -10px;
+}
+.DTFC_LeftBodyLiner {
+	overflow-y: hidden;
+	overflow: hidden;
+}
+/*虚线
+*/
+.hr_dashed {
+	clear: both;
+	background-color:#FFFFFF;
+	margin: 10px 0px 0px 0px;
+	height:1px; border:none;border-top:1px dashed #dcdcdc;
+}
+
+/*查询页面的分割线虚线
+*/
+.hr_select {
+	clear: both;
+	background-color:#FFFFFF;
+	margin: 10px 0px 0px 0px;
+	height:1px; border:none;border-top:1px dashed #dcdcdc;
+}
+/* .form-sm .form-control{
+	padding: 3px 6px;
+	height: 34px;
+}
+.form-sm .select2-container--default .select2-selection--single,.form-sm .select2-selection .select2-selection--single{
+	padding:6px 6px 6px 0px;
+	height: 34px;
+}
+.form-sm .control-label{
+	padding-top: 4px;
+} */
+thead tr th div.checkbox-primary{
+	margin-top: -18px;padding-left: 0px;
+}
+thead tr th div.checkbox-primary input[type=checkbox]{
+	width:20px;
+	height:20px;
+	cursor:pointer;
+}
+
+thead tr th div.checkbox-primary label{
+}
+tbody tr td div.checkbox-primary input[type=checkbox]{
+	width:20px;
+	height:20px;
+	cursor:pointer;
+}
+
+
+.form_input .form-group{
+	padding-bottom:10px;
+	margin: 0px 0px 10px 0px;
+	padding: 0px 10px 10px 10px;
+	border-bottom:1px dashed #EEEEEE;
+}
+.form_input .form-group label{
+	padding-right: 0px;
+}
+.form_view .form-group{
+	padding-bottom:10px;
+	margin: 0px 0px 10px 0px;
+	padding: 0px 10px 10px 10px;
+	border-bottom:1px dashed #EEEEEE;
+}
+.form_view .form-group label{
+	padding-right: 0px;
+}
+
+.visible_1 {
+	background-color: #66B3FF;
+	color: #FFFFFF;
+}
+.visible_0 {
+	background-color: #EEEEEE;
+	color: #A8A8A8;
+}

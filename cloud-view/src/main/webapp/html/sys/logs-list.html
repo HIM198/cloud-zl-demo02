@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="../../styles/css/element-ui.css">
+</head>
+<body>
+    <div id="app">
+        <el-form style="margin-left: 20px;" :inline="true" :model="search" class="demo-form-inline">
+            <el-form-item label="uri">
+                <el-input v-model="search.valueOne" placeholder="请输入uri"></el-input>
+            </el-form-item>
+            <el-form-item label="requestId">
+                <el-input v-model="search.valueTwo" placeholder="请输入requestId"></el-input>
+            </el-form-item>
+            <el-form-item label="beanMethod">
+                <el-input v-model="search.valueThree" placeholder="请输入beanMethod"></el-input>
+            </el-form-item>
+            <el-form-item label="beanName">
+                <el-input v-model="search.valueFour" placeholder="请输入beanName"></el-input>
+            </el-form-item>
+            <br>
+            <el-form-item>
+                <el-button type="primary" size="small" @click="initUserList()"> <i class="fa fa-search"></i> 查询</el-button>
+            </el-form-item>
+            <el-form-item>
+                <el-button type="primary" size="small" @click="clearSearch()"> <i class="el-icon-refresh-left"></i> 重置</el-button>
+            </el-form-item>
+            <el-form-item>
+                <el-button type="success" size="small" @click="downloadData()"> <i class="el-icon-tickets"></i> 导出</el-button>
+            </el-form-item>
+        </el-form>
+
+        <el-table
+                :data="tableData"
+                border>
+            <el-table-column
+                    fixed
+                    prop="date"
+                    label="序号"
+                    width="50">
+                <template slot-scope="scope">
+                    {{scope.$index+1}}
+                </template>
+            </el-table-column>
+            <el-table-column
+                    fixed
+                    prop="uri"
+                    label="uri"
+                    :show-overflow-tooltip="true"
+                    width="150">
+            </el-table-column>
+            <el-table-column
+                    fixed
+                    :show-overflow-tooltip="true"
+                    prop="method"
+                    label="method"
+                    width="80">
+            </el-table-column>
+            <el-table-column
+                    prop="requestId"
+                    label="requestId"
+                    width="100"
+                    :show-overflow-tooltip="true">
+            </el-table-column>
+            <el-table-column
+                    prop="params"
+                    label="params"
+                    width="100"
+                    :show-overflow-tooltip="true">
+            </el-table-column>
+            <el-table-column
+                    prop="createDate"
+                    label="createDate"
+                    width="180"
+                    :show-overflow-tooltip="true">
+            </el-table-column>
+            <el-table-column
+                    prop="beanName"
+                    label="beanName"
+                    width="200"
+                    :show-overflow-tooltip="true">
+            </el-table-column>
+            <el-table-column
+                    prop="beanMethod"
+                    label="beanMethod"
+                    width="120"
+                    :show-overflow-tooltip="true">
+            </el-table-column>
+            <el-table-column
+                    prop="beginTime"
+                    label="请求时间"
+                    width="200"
+                    :show-overflow-tooltip="true">
+            </el-table-column>
+            <el-table-column
+                    prop="endTime"
+                    label="响应时间"
+                    width="200"
+                    :show-overflow-tooltip="true">
+            </el-table-column>
+            <el-table-column
+                    prop="requestTime"
+                    label="请求耗时"
+                    :show-overflow-tooltip="true">
+            </el-table-column>
+            <el-table-column
+                    prop="url"
+                    label="url"
+                    width="200"
+                    :show-overflow-tooltip="true">
+            </el-table-column>
+            <el-table-column
+                    prop="osInfo"
+                    label="访问系统"
+                    width="200"
+                    :show-overflow-tooltip="true">
+            </el-table-column>
+            <el-table-column
+                    prop="browserInfo"
+                    label="浏览器"
+                    width="200"
+                    :show-overflow-tooltip="true">
+            </el-table-column>
+            <el-table-column
+                    fixed="right"
+                    label="操作"
+                    width="80">
+                <template slot-scope="scope">
+                    <el-button
+                            type="warning"
+                            size="mini"
+                            @click="handleEdit(scope.row.id)">详情</el-button>
+                </template>
+            </el-table-column>
+        </el-table>
+
+        <el-pagination
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+                :current-page="search.pageNumber"
+                :page-sizes="[10,100]"
+                :page-size="search.pageCount"
+                layout="total, sizes, prev, pager, next, jumper"
+                :total="total">
+        </el-pagination>
+    </div>
+</body>
+</html>
+<link rel="stylesheet" href="../../styles/css/font-awesome.min.css">
+<script src="../../styles/js/vue.js"></script>
+<script src="../../styles/js/element.js"></script>
+<script src="../../styles/js/axios.js"></script>
+<script src="../../styles/js/httpRequest.js"></script>
+<script>
+    new Vue({
+        el:"#app",
+        data:function (){
+            return{
+                form:{},
+                tableData:[],
+                search:{
+                    pageNumber:1,
+                    pageCount:10
+                },
+                total:0,
+                dialogFormVisible:false,
+                dialogFormVisibleAdd:false,
+                formLabelWidth:'120px',
+                //记录当前分配权限用户的id
+                uid:0,
+                multipleSelection: [],
+                roleList: [],
+                tableDataPro:[],
+                ruleForm: {
+                    name: '',
+                    password: '',
+                },
+                flag:true
+            }
+        },
+        methods:{
+            //用户列表查询
+            initUserList(){
+                axiosPostRequest("/s-log-operatorall/findPage",this.search).then(res=>{
+                    this.tableData=res.records
+                    this.total=res.total
+                })
+
+            },
+            handleSizeChange(val) {
+                this.search.pageCount=val;
+                this.initUserList();
+            },
+            handleCurrentChange(val) {
+                this.search.pageNumber=val;
+                this.initUserList();
+            },
+            //编辑
+            handleEdit(id){
+                location.href='/html/sys/logs-details.html?id='+id
+            },
+            //跳转到添加页
+            oppenAddDialog(){
+                this.flag=true;
+                this.form={};
+                this.dialogFormVisibleAdd=true;
+            },
+            handleSelectionChange(val) {
+                this.multipleSelection = val;
+            },
+            //重置查询框
+            clearSearch(){
+                this.search={
+                    pageNumber:1,
+                    pageCount:10
+                }
+                this.initUserList();
+            },
+            //导出
+            downloadData(){
+                axios.post("/import/downloadHouseData/8644620b32a04290b573a8b9ce5e5b81",this.search,{ responseType: 'blob' }).then(res=>{
+                    var blob = new Blob([res.data])
+                    let fileName =  decodeURI(res.headers['content-disposition'].split("filename= ")[1])
+                    var downloadElement = document.createElement('a');
+                    var href = window.URL.createObjectURL(blob); //创建下载的链接
+                    downloadElement.href = href;
+                    downloadElement.download = fileName; //下载后文件名
+                    document.body.appendChild(downloadElement);
+                    downloadElement.click(); //点击下载                　　
+                    document.body.removeChild(downloadElement); //下载完成移除元素　　
+                    window.URL.revokeObjectURL(href); //释放掉blob对象
+                })
+            },
+        },
+        created(){
+            this.initUserList();
+        }
+    })
+</script>
